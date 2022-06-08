@@ -44,10 +44,10 @@ include_directories(include)
 ament_python_install_package(${PROJECT_NAME})
 
 # Install Python executables
-#install(PROGRAMS
-#  scripts/sample_node.py
-#  DESTINATION lib/${PROJECT_NAME}
-#)
+install(PROGRAMS
+ scripts/simple_motor_subscriber.py
+ DESTINATION lib/${PROJECT_NAME}
+)
 
 install(
   DIRECTORY config launch maps meshes models params rviz scripts src tests worlds
