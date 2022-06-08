@@ -4,10 +4,10 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
-from real_lidarbot import PCA9685
+from real_lidarbot.PCA9685 import PCA9685
 
 #--- Motor driver setup
-pwm = PCA9685.PCA9685(0x40, debug=False)
+pwm = PCA9685(0x40, debug=False)
 pwm.setPWMFreq(50)
 
 #--- Motor driver class

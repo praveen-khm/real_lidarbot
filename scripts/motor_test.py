@@ -1,13 +1,14 @@
 #!/usr/bin/python3
 
-from real_lidarbot import PCA9685
+# from PCA9685 import PCA9685
+from real_lidarbot.PCA9685 import PCA9685
 import time
 
 Dir = [
     'forward',
     'backward',
 ]
-pwm = PCA9685.PCA9685(0x40, debug=False)
+pwm = PCA9685(0x40, debug=False)
 pwm.setPWMFreq(50)
 
 class MotorDriver():
