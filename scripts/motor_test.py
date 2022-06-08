@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-# from PCA9685 import PCA9685
 from real_lidarbot.PCA9685 import PCA9685
 import time
 
@@ -26,21 +25,17 @@ class MotorDriver():
         if(motor == 0):
             pwm.setDutycycle(self.PWMA, speed)
             if(index == Dir[0]):
-                print ("1")
                 pwm.setLevel(self.AIN1, 0)
                 pwm.setLevel(self.AIN2, 1)
             else:
-                print ("2")
                 pwm.setLevel(self.AIN1, 1)
                 pwm.setLevel(self.AIN2, 0)
         else:
             pwm.setDutycycle(self.PWMB, speed)
             if(index == Dir[0]):
-                print ("3")
                 pwm.setLevel(self.BIN1, 0)
                 pwm.setLevel(self.BIN2, 1)
             else:
-                print ("4")
                 pwm.setLevel(self.BIN1, 1)
                 pwm.setLevel(self.BIN2, 0)
 
@@ -50,19 +45,23 @@ class MotorDriver():
         else:
             pwm.setDutycycle(self.PWMB, 0)
 
-print("this is a motor driver test code")
-Motor = MotorDriver()
+try: 
+    print("this is a motor driver test code")
+    Motor = MotorDriver()
 
-print("forward 2 s")
-Motor.MotorRun(0, 'forward', 50)
-Motor.MotorRun(1, 'forward', 50)
-time.sleep(2)
+    print("forward 2 s")
+    Motor.MotorRun(0, 'forward', 50)
+    Motor.MotorRun(1, 'forward', 50)
+    time.sleep(2)
 
-print("backward 2 s")
-Motor.MotorRun(0, 'backward', 50)
-Motor.MotorRun(1, 'backward', 50)
-time.sleep(2)
+    print("backward 2 s")
+    Motor.MotorRun(0, 'backward', 50)
+    Motor.MotorRun(1, 'backward', 50)
+    time.sleep(2)
 
-print("stop")
-Motor.MotorStop(0)
-Motor.MotorStop(1)
+    print("stop")
+    Motor.MotorStop(0)
+    Motor.MotorStop(1)
+
+except IOError as e:
+    print(e)
