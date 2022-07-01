@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-# from PCA9685 import PCA9685
 from real_lidarbot.PCA9685 import PCA9685
 import time
 
