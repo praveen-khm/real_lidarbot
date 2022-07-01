@@ -34,7 +34,6 @@ class ImuNode(Node):
 
         Acceleromter data unit - m/s^2
         Gyroscope data unit   - rad/sec
-
         '''
 
         # Initialize Imu message
@@ -52,8 +51,9 @@ class ImuNode(Node):
         msg.angular_velocity.x = gyro_data['x']
         msg.angular_velocity.y = gyro_data['y']
         msg.angular_velocity.z = gyro_data['z']
-        
-        msg.header.frame_id = 'imu_link'       # Set transform frame with which this message is associated
+
+        # Set transform frame with which this message is associated
+        msg.header.frame_id = 'imu_link'      
 
         # Publish imu message to 'imu/data' topic
         self.imu_publisher.publish(msg)
@@ -86,7 +86,6 @@ if __name__ == '__main__':
         # Shutdown ROS python client
         rclpy.shutdown()
 
-
 # TO-DO:
 # Adjust timer period later
-# Disable data logging to console?
+# Disable data logging?
