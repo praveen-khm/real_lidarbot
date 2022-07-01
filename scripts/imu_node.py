@@ -53,7 +53,9 @@ class ImuNode(Node):
         msg.angular_velocity.y = gyro_data['y']
         msg.angular_velocity.z = gyro_data['z']
         
-        # Publish imu messages to 'imu/data' topic
+        msg.header.frame_id = 'imu_link'       # Set transform frame with which this message is associated
+
+        # Publish imu message to 'imu/data' topic
         self.imu_publisher.publish(msg)
 
         # Log data to the console for debugging purposes
