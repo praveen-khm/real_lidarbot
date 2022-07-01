@@ -45,8 +45,8 @@ ament_python_install_package(${PROJECT_NAME})
 
 # Install Python executables
 install(PROGRAMS
- scripts/simple_motor_subscriber.py
  scripts/motor_test.py
+ scripts/imu_node.py
  DESTINATION lib/${PROJECT_NAME}
 )
 

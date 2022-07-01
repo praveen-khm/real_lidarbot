@@ -85,8 +85,8 @@ class PCA9685:
     else:
       self.setPWM(channel, 0, 0)
 
-# pwm = PCA9685(0x5f, debug=False)
-# pwm.setPWMFreq(50)
-# pwm.setDutycycle(0,100)
-# pwm.setLevel(1,0)
-# pwm.setLevel(2,1)
+#pwm = PCA9685(0x5f, debug=False)
+#pwm.setPWMFreq(50)
+#pwm.setDutycycle(0,100)
+#pwm.setLevel(1,0)
+#pwm.setLevel(2,1)
