@@ -13,10 +13,10 @@ ROS2 Foxy, running on Ubuntu server 20.04 on a Raspberry Pi 4, is employed in co
 
 <br/>
 
-<p align="center">
-  <img src=images/side_view.jpg width="400">
-</p>
-
 <p align='center'>
   <img src=images/top_view.jpg width="400">
+</p>
+
+<p align="center">
+  <img src=images/side_view.jpg width="400">
 </p>
