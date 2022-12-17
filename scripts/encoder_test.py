@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 # Program to count the number of wheel encoder ticks/pulses
 
 import signal

@@ -20,6 +20,11 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/Tick.msg"
+)
 
 # uncomment the following section in order to fill in
 # further dependencies manually.
@@ -47,6 +52,8 @@ ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS
  scripts/motor_test.py
  scripts/imu_node.py
+ scripts/encoder_node.py
+ scripts/robot_movt_test.py
  DESTINATION lib/${PROJECT_NAME}
 )
 
