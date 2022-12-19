@@ -13,6 +13,7 @@ class Robot(Node):
     def __init__(self, name):
 
         super().__init__(name)
+        self.get_logger().info(self.get_name() + ' is initialized')
         
         self.wheel_diameter = 0.067 #
         self.wheel_base = 0.14      #
@@ -30,7 +31,7 @@ class Robot(Node):
                 self.joy_callback,
                 5
             )
-        self.joy_subscription # Addded to prevent unused variable warning
+        self.joy_subscription # Added to prevent unused variable warning
         
         # Create publishers for /right_motor_dir and /left_motor_dir topics of message type String
         self.right_motor_dir_pub = self.create_publisher(String, 'right_motor_dir', 1) # Adjust frequency if needed
@@ -71,23 +72,28 @@ class Robot(Node):
         Lstick forward/backward   axes[1]    +1 (forward) to -1 (backward)
         R2                        buttons[7]  1 pressed, 0 otherwise
         '''
-
+        
+        # Map left/right movement to self.spin, set to zero if below 0.10
         if abs(msg.axes[2]) > 0.10:
             self.spin = msg.axes[2]
         else:
             self.spin = 0.0
 
+        # Map forward/backward movement to self.speed, set to zero if below 0.10
         if abs(msg.axes[1]) > 0.10:
             self.speed = msg.axes[1]
         else:
             self.speed = 0.0
 
+        # Set both self.speed and self.spin to zero when R2 button is pressed
         if msg.buttons[7] == 1:
             self.speed = 0.0
             self.spin = 0.0
 
+        #
         self.set_motor_speeds()
         
+    #
     def set_motor_speeds(self):
         # First figure out the speed of each wheel based on spin: each wheel
         # covers self._wheel_base meters in one radian, so the target speed
@@ -108,32 +114,32 @@ class Robot(Node):
         
         left_percentage = (left_target_rpm / self.left_max_rpm) * 100.0
         right_percentage = (right_target_rpm / self.right_max_rpm) * 100.0
-        #
-        # clip to +- 100%
-        #left_percentage = max(min(left_percentage, 100.0), -100.0)
-        #right_percentage = max(min(right_percentage, 100.0), -100.0)
-        # clip to +- 60%
-        left_percentage = max(min(left_percentage, 60.0), -60.0)
-        right_percentage = max(min(right_percentage, 60.0), -60.0)
+
+        # clip to +- 50%
+        left_percentage = max(min(left_percentage, 60.0), -50.0)
+        right_percentage = max(min(right_percentage, 60.0), -50.0)
         
         #
+        index_r = String()
+        index_l = String()
+
         if right_percentage > 0:
-            index_r = 'backward'
+            index_r.data = 'forward'
         else:
-            index_r = 'forward'
+            index_r.data = 'backward' 
 
         if left_percentage > 0:
-            index_l = 'backward'
+            index_l.data = 'forward' 
         else:
-            index_l = 'forward'
+            index_l.data = 'backward'
 
         # Publish motor directions
         self.right_motor_dir_pub.publish(index_r)
         self.left_motor_dir_pub.publish(index_l)
         
         #
-        self.motor.MotorRun(0, index_l, abs(left_percentage))
-        self.motor.MotorRun(1, index_r, abs(right_percentage))
+        self.motor.MotorRun(0, index_l.data, abs(left_percentage))
+        self.motor.MotorRun(1, index_r.data, abs(right_percentage))
 
 if __name__ == '__main__':
     try:
@@ -160,4 +166,3 @@ if __name__ == '__main__':
 
 
 # NOTES: 
-# Credit Sid Faber in the docs

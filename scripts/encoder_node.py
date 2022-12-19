@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 '''
-    This encoder node publishes the right and left wheel encoder pulses/ticks to topics /sdfasd and /asdfasd respectively.
+    This encoder node subscribes to topics /right_motor_dir and /left_motor_dir in order to publish to topics /right_ticks and /left_ticks for the individual motor pulses/ticks.
 '''
 
 import signal
@@ -9,9 +9,9 @@ import sys
 import time
 import RPi.GPIO as GPIO
 from real_lidarbot.msg import Tick
-from real_lidarbot.PCA9685 import PCA9685
 import rclpy
 from rclpy.node import Node
+from std_msgs.msg import String
 
 # GPIO Pins
 LEFT_WHL_ENCODER = 25
@@ -24,8 +24,6 @@ right_wheel_pulse_count = 0
 # Default wheel directions
 left_wheel_direction = 'backward'
 right_wheel_direction = 'backward'
-
-direction = ['forward','backward']  # 'list of wheel direction options'
 
 # Set mode for GPIO pins
 GPIO.setmode(GPIO.BCM)
@@ -43,7 +41,6 @@ def left_wheel_pulse(channel):
     else:
         left_wheel_pulse_count -= 1
     print('Left: ', left_wheel_pulse_count)
-    #print(left_wheel_direction)
 
 # Right wheel callback function
 def right_wheel_pulse(channel):
@@ -54,7 +51,6 @@ def right_wheel_pulse(channel):
     else:
         right_wheel_pulse_count -= 1
     print('Right: ', right_wheel_pulse_count)
-    #print(right_wheel_direction)
 
 # Handles CTRL+C to shutdown the program
 def signal_handler(sig, frame):
@@ -65,65 +61,47 @@ def signal_handler(sig, frame):
 GPIO.add_event_detect(LEFT_WHL_ENCODER, GPIO.FALLING, callback=left_wheel_pulse)
 GPIO.add_event_detect(RIGHT_WHL_ENCODER, GPIO.FALLING, callback=right_wheel_pulse)
 
-# Setup Motor Driver...
-pwm = PCA9685(0x40, debug=False)
-pwm.setPWMFreq(50)
-
-class MotorDriver():
-    def __init__(self):
-        self.PWMA = 0
-        self.AIN1 = 1
-        self.AIN2 = 2
-        self.PWMB = 5
-        self.BIN1 = 3
-        self.BIN2 = 4
-
-    #
-    def MotorRun(self, motor, index, speed):
-        global right_wheel_direction, left_wheel_direction
-        if speed > 100:
-            return
-        if(motor == 0):
-            pwm.setDutycycle(self.PWMA, speed)
-            left_wheel_direction = index
-
-            if(index == direction[0]):
-                pwm.setLevel(self.AIN1, 0)
-                pwm.setLevel(self.AIN2, 1)
-            else:
-                pwm.setLevel(self.AIN1, 1)
-                pwm.setLevel(self.AIN2, 0)
-        else:
-            pwm.setDutycycle(self.PWMB, speed)
-            right_wheel_direction = index
-
-            if(index == direction[0]):
-                pwm.setLevel(self.BIN1, 0)
-                pwm.setLevel(self.BIN2, 1)
-            else:
-                pwm.setLevel(self.BIN1, 1)
-                pwm.setLevel(self.BIN2, 0)
-
-    #
-    def MotorStop(self, motor):
-        if (motor == 0):
-            pwm.setDutycycle(self.PWMA, 0)
-        else:
-            pwm.setDutycycle(self.PWMB, 0)
-
 #
 class Encoder(Node):
-    def __init__(self):
-       super().__init__('encoder_node')
+    def __init__(self, name):
+
+       super().__init__(name)
        self.get_logger().info(self.get_name() + ' is initialized')
 
        # any class attributes?
+       
+       # Create subscription to /right_motor_dir 
+       self.right_dir_sub = self.create_subscription(
+               String,
+               'right_motor_dir',
+               self.right_dir_callback,
+               1 # Play with this as well as the queue variable for the right_motor_dir topic
+            )
+
+       # Create subscription to /left_motor_dir topic
+       self.left_dir_sub = self.create_subscription(
+               String,
+               'left_motor_dir',
+               self.left_dir_callback,
+               1
+            )
+
+       self.right_dir_sub # Added to prevent unused variable warning (remove this?)
+       self.left_dir_sub # Added to prevent unused variable warning
 
        # Create publisher for /right_ticks and /left_wheel topics of type Tick
-       self.right_pub = self.create_publisher(Tick, 'right_ticks', 1)
-       self.left_pub = self.create_publisher(Tick, 'left_ticks', 1)
+       self.right_tick_pub = self.create_publisher(Tick, 'right_ticks', 1)
+       self.left_tick_pub = self.create_publisher(Tick, 'left_ticks', 1)
        timer_period = 0.5 # seconds
        self.timer = self.create_timer(timer_period, self.timer_callback)
+
+    def right_dir_callback(self, msg):
+        global right_wheel_direction
+        right_wheel_direction = msg.data
+
+    def left_dir_callback(self, msg):
+        global left_wheel_direction
+        left_wheel_direction = msg.data
 
     def timer_callback(self):
         global right_wheel_pulse_count, left_wheel_pulse_count
@@ -137,46 +115,21 @@ class Encoder(Node):
         left.tick = left_wheel_pulse_count
         
         #
-        self.right_pub.publish(right)
-        self.left_pub.publish(left)
+        self.right_tick_pub.publish(right)
+        self.left_tick_pub.publish(left)
 
-    # Create a subscriber to motor driver or /joy topic
 
 if __name__ == '__main__':
     try:
         # Initialize signal module
         signal.signal(signal.SIGINT, signal_handler)
 
-        # 'Initialize MotorDriver instance' 
-        Motor = MotorDriver()
-
         # Initialize ROS python client
         rclpy.init()
 
         # Create encoder node
-        encoder_node = Encoder()
+        encoder_node = Encoder('encoder_node')
         
-        # Motor tests
-        print("Motor driver tests:")
-        print("forward 2 s")
-        Motor.MotorRun(0, 'forward', 60)
-        Motor.MotorRun(1, 'forward', 60)
-        time.sleep(2)
-
-        print("backward 2 s")
-        Motor.MotorRun(0, 'backward', 60)
-        Motor.MotorRun(1, 'backward', 60)
-        time.sleep(2)
-
-        print('Move left forwards and right backwards')
-        Motor.MotorRun(0, 'forward', 60)
-        Motor.MotorRun(1, 'backward', 60)
-        time.sleep(2)
-
-        print("stop")
-        Motor.MotorStop(0)
-        Motor.MotorStop(1)
-
         #
         rclpy.spin(encoder_node)
 
@@ -193,10 +146,5 @@ if __name__ == '__main__':
         # Shutdown ROS python client
         rclpy.shutdown()
 
-# Way to minimize the use of global variables?
-# Rename variables (if needed) later
-# Finalize on name of the node and file
 # Change the summary of the program on top
-# PWMA and PWMB control speed of motors, AIN1 and AIN2, BIN1 and BIN2 control rotate direction of motors.
-# A1 and A2, B1 and B2 are connect to positive/negative poles of two motors separately.
 # Change message type to int16 if there's a need for it like Addison did.
