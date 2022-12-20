@@ -7,7 +7,6 @@
 
 import signal
 import sys
-import time
 import RPi.GPIO as GPIO
 from real_lidarbot.msg import Tick
 import rclpy
@@ -64,14 +63,12 @@ class Encoder(Node):
        super().__init__(name)
        self.get_logger().info(self.get_name() + ' is initialized')
 
-       # any class attributes?
-       
-       # Create subscription to /right_motor_dir 
+       # Create subscription to /right_motor_dir topic
        self.right_dir_sub = self.create_subscription(
                String,
                'right_motor_dir',
                self.right_dir_callback,
-               1 # Play with this as well as the queue variable for the right_motor_dir topic
+               1 
             )
 
        # Create subscription to /left_motor_dir topic
@@ -81,9 +78,6 @@ class Encoder(Node):
                self.left_dir_callback,
                1
             )
-
-       #self.right_dir_sub # Added to prevent unused variable warning (remove this?)
-       #self.left_dir_sub # Added to prevent unused variable warning
 
        # Create publisher for /right_ticks and /left_wheel topics of type Tick
        self.right_tick_pub = self.create_publisher(Tick, 'right_ticks', 1)
@@ -114,7 +108,6 @@ class Encoder(Node):
         self.right_tick_pub.publish(right)
         self.left_tick_pub.publish(left)
 
-
 # Handles CTRL+C to shutdown the program
 def signal_handler(sig, frame):
     # Clean up GPIO pins
@@ -129,7 +122,6 @@ def signal_handler(sig, frame):
     
     # Exit python interpreter
     sys.exit(0)
-
 
 if __name__ == '__main__':
     #Initialize signal module
@@ -146,8 +138,3 @@ if __name__ == '__main__':
 
     # Pause program indefinitely until the next interrupt
     signal.pause()
-
-
-
-# Change the summary of the program on top
-# Change message type to int16 if there's a need for it like Addison did.

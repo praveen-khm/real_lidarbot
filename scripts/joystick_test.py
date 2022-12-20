@@ -9,7 +9,6 @@ from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Joy
 
 class Robot(Node):
-
     def __init__(self, name):
 
         super().__init__(name)
@@ -31,11 +30,10 @@ class Robot(Node):
                 self.joy_callback,
                 5
             )
-        self.joy_subscription # Added to prevent unused variable warning
         
         # Create publishers for /right_motor_dir and /left_motor_dir topics of message type String
-        self.right_motor_dir_pub = self.create_publisher(String, 'right_motor_dir', 1) # Adjust frequency if needed
-        self.left_motor_dir_pub = self.create_publisher(String, 'left_motor_dir', 1) # Adjust frequency if needed
+        self.right_motor_dir_pub = self.create_publisher(String, 'right_motor_dir', 1) 
+        self.left_motor_dir_pub = self.create_publisher(String, 'left_motor_dir', 1) 
 
     # Stop motors
     def stop(self):
@@ -156,7 +154,6 @@ def main():
 
     # On executing Ctrl+C in the terminal
     except KeyboardInterrupt:
-
         # Destroy node
         robot.destroy_node()
         print('\nlidar_bot joystick test node destroyed')
