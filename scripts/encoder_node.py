@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
 '''
-    This encoder node subscribes to topics /right_motor_dir and /left_motor_dir in order to publish to topics /right_ticks and /left_ticks for the individual motor pulses/ticks.
+    This encoder node subscribes to topics /right_motor_dir and /left_motor_dir in order to 
+    publish to topics /right_ticks and /left_ticks for the individual motor pulses/ticks.
 '''
 
 import signal
@@ -52,16 +53,11 @@ def right_wheel_pulse(channel):
         right_wheel_pulse_count -= 1
     print('Right: ', right_wheel_pulse_count)
 
-# Handles CTRL+C to shutdown the program
-def signal_handler(sig, frame):
-    GPIO.cleanup()
-    sys.exit(0)
-
 # Initialize encoder interrupts for falling signal states
 GPIO.add_event_detect(LEFT_WHL_ENCODER, GPIO.FALLING, callback=left_wheel_pulse)
 GPIO.add_event_detect(RIGHT_WHL_ENCODER, GPIO.FALLING, callback=right_wheel_pulse)
 
-#
+# Encoder class
 class Encoder(Node):
     def __init__(self, name):
 
@@ -86,8 +82,8 @@ class Encoder(Node):
                1
             )
 
-       self.right_dir_sub # Added to prevent unused variable warning (remove this?)
-       self.left_dir_sub # Added to prevent unused variable warning
+       #self.right_dir_sub # Added to prevent unused variable warning (remove this?)
+       #self.left_dir_sub # Added to prevent unused variable warning
 
        # Create publisher for /right_ticks and /left_wheel topics of type Tick
        self.right_tick_pub = self.create_publisher(Tick, 'right_ticks', 1)
@@ -106,45 +102,52 @@ class Encoder(Node):
     def timer_callback(self):
         global right_wheel_pulse_count, left_wheel_pulse_count
         
-        #
+        # Initialize tick messages
         right = Tick()
         left = Tick()
         
-        #
+        # Assign wheel pulse counts to tick messages
         right.tick = right_wheel_pulse_count
         left.tick = left_wheel_pulse_count
         
-        #
+        # Publish tick messages to /right_ticks and /left_ticks topics
         self.right_tick_pub.publish(right)
         self.left_tick_pub.publish(left)
 
 
+# Handles CTRL+C to shutdown the program
+def signal_handler(sig, frame):
+    # Clean up GPIO pins
+    GPIO.cleanup()
+
+    # Destroy node
+    print('\nencoder_node destroyed')
+    encoder_node.destroy_node()
+    
+    # Shutdown ROS python client
+    rclpy.shutdown()
+    
+    # Exit python interpreter
+    sys.exit(0)
+
+
 if __name__ == '__main__':
-    try:
-        # Initialize signal module
-        signal.signal(signal.SIGINT, signal_handler)
+    #Initialize signal module
+    signal.signal(signal.SIGINT, signal_handler)
 
-        # Initialize ROS python client
-        rclpy.init()
+    # Initialize ROS python client
+    rclpy.init()
 
-        # Create encoder node
-        encoder_node = Encoder('encoder_node')
-        
-        #
-        rclpy.spin(encoder_node)
+    # Create encoder node
+    encoder_node = Encoder('encoder_node')
+    
+    # Spins node to call callback function    
+    rclpy.spin(encoder_node)
 
-        # Pause program indefinitely until the next interrupt
-        signal.pause()
+    # Pause program indefinitely until the next interrupt
+    signal.pause()
 
-    except IOError as e:
-        print(e)
 
-    except KeyboardInterrupt:
-        # Destroy node
-        encoder_node.destroy_node()
-
-        # Shutdown ROS python client
-        rclpy.shutdown()
 
 # Change the summary of the program on top
 # Change message type to int16 if there's a need for it like Addison did.

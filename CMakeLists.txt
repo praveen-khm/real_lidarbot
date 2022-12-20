@@ -53,6 +53,7 @@ install(PROGRAMS
  scripts/motor_test.py
  scripts/imu_node.py
  scripts/encoder_node.py
+ scripts/encoder_test.py
  scripts/joystick_test.py
  DESTINATION lib/${PROJECT_NAME}
 )

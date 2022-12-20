@@ -141,14 +141,14 @@ class Robot(Node):
         self.motor.MotorRun(0, index_l.data, abs(left_percentage))
         self.motor.MotorRun(1, index_r.data, abs(right_percentage))
 
-if __name__ == '__main__':
+# Main function
+def main():
     try:
         # Initialize ROS python client
         rclpy.init()
 
         # Create robot node
         robot = Robot('lidar_bot')
-
         print("Spinning...")
 
         # Wait for incoming commands
@@ -159,10 +159,13 @@ if __name__ == '__main__':
 
         # Destroy node
         robot.destroy_node()
+        print('\nlidar_bot joystick test node destroyed')
 
         # Shutdown ROS python client
         rclpy.shutdown()
 
-
+if __name__ == '__main__':
+    main()
 
 # NOTES: 
+# Comments, comments
