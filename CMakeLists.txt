@@ -55,6 +55,7 @@ install(PROGRAMS
  scripts/encoder_node.py
  scripts/encoder_test.py
  scripts/joystick_test.py
+ scripts/odometry_node.py
  DESTINATION lib/${PROJECT_NAME}
 )
 

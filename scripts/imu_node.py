@@ -10,7 +10,7 @@ from rclpy.node import Node
 from real_lidarbot.mpu6050 import mpu6050
 from sensor_msgs.msg import Imu
 
-# IMU class inheriting from the Node class
+# IMU class 
 class ImuNode(Node):
     def __init__(self):
         super().__init__('imu_node')
@@ -58,13 +58,13 @@ class ImuNode(Node):
         # Publish imu message to 'imu/data' topic
         self.imu_publisher.publish(msg)
 
-        # Log data to the console for debugging purposes
-        self.get_logger().info("Accel x: " + str(msg.linear_acceleration.x) + 
-                                " y: " + str(msg.linear_acceleration.y) +
-                                " z: " + str(msg.linear_acceleration.z) +
-                                " Gyro x: " + str(msg.angular_velocity.x) +
-                                " y: " + str(msg.angular_velocity.y) +
-                                " z: " + str( msg.angular_velocity.z)
+        # Log data to the console for debugging 
+        self.get_logger().info("Accel x: %.4f" % (msg.linear_acceleration.x) +
+                                " y: %.4f" % (msg.linear_acceleration.y) +
+                                " z: %.4f" % (msg.linear_acceleration.z) +
+                                " Gyro x: %.4f" % (msg.angular_velocity.x) +
+                                " y: %.4f" % (msg.angular_velocity.y) +
+                                " z: %.4f" % (msg.angular_velocity.z)
                                 )
 
 if __name__ == '__main__':

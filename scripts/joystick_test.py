@@ -1,5 +1,9 @@
 #!/usr/bin/python3
 
+'''
+    Node description
+'''
+
 from real_lidarbot.motor import Motor
 import math
 import rclpy
@@ -10,7 +14,6 @@ from sensor_msgs.msg import Joy
 
 class Robot(Node):
     def __init__(self, name):
-
         super().__init__(name)
         self.get_logger().info(self.get_name() + ' is initialized')
         
