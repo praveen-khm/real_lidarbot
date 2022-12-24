@@ -17,8 +17,8 @@ class Robot(Node):
         super().__init__(name)
         self.get_logger().info(self.get_name() + ' is initialized')
         
-        self.wheel_diameter = 0.067 #
-        self.wheel_base = 0.14      #
+        self.wheel_diameter = 0.07  #
+        self.wheel_base = 0.145     #
         self.left_max_rpm = 200.0   #
         self.right_max_rpm = 200.0  #
         self.motor = Motor()        # Initialize motor driver
@@ -74,8 +74,8 @@ class Robot(Node):
         R2                        buttons[7]  1 pressed, 0 otherwise
         '''
         
-        # Map left/right movement to self.spin, set to zero if below 0.10
-        if abs(msg.axes[2]) > 0.10:
+        # Map left/right movement to self.spin, set to zero if below 0.22
+        if abs(msg.axes[2]) > 0.22:
             self.spin = msg.axes[2]
         else:
             self.spin = 0.0
@@ -116,9 +116,9 @@ class Robot(Node):
         left_percentage = (left_target_rpm / self.left_max_rpm) * 100.0
         right_percentage = (right_target_rpm / self.right_max_rpm) * 100.0
 
-        # clip to +- 50%
-        left_percentage = max(min(left_percentage, 60.0), -50.0)
-        right_percentage = max(min(right_percentage, 60.0), -50.0)
+        # clip to +- 40%
+        left_percentage = max(min(left_percentage, 40.0), -40.0)
+        right_percentage = max(min(right_percentage, 40.0), -40.0)
         
         #
         index_r = String()
@@ -150,7 +150,6 @@ def main():
 
         # Create robot node
         robot = Robot('lidar_bot')
-        print("Spinning...")
 
         # Wait for incoming commands
         rclpy.spin(robot)

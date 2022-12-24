@@ -22,8 +22,8 @@ left_wheel_pulse_count = 0
 right_wheel_pulse_count = 0
 
 # Default wheel directions
-left_wheel_direction = 'backward'
-right_wheel_direction = 'backward'
+left_wheel_direction = 'forward'
+right_wheel_direction = 'forward'
 
 # Set mode for GPIO pins
 GPIO.setmode(GPIO.BCM)
@@ -80,21 +80,15 @@ class Encoder(Node):
 
        # Create a publisher for the /ticks topic, which holds both left and right ticks, of type Tick
        self.ticks_pub = self.create_publisher(Tick, 'ticks', 1)
-       timer_period = 0.5 # seconds
+       timer_period = 0.05 # seconds
        self.timer = self.create_timer(timer_period, self.timer_callback)
 
-    def right_dir_callback(self):
+    def right_dir_callback(self, msg):
         global right_wheel_direction
-
-        # Initialize String message
-        msg = String()
         right_wheel_direction = msg.data
 
-    def left_dir_callback(self):
+    def left_dir_callback(self, msg):
         global left_wheel_direction
-
-        # Initialize String message
-        msg = String()
         left_wheel_direction = msg.data
 
     def timer_callback(self):
