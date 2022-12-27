@@ -8,16 +8,18 @@ from math import pi, cos, sin, floor
 from real_lidarbot.msg import Tick
 import rclpy
 from rclpy.node import Node
+from sensor_msgs.msg import Joy
+from nav_msgs.msg import Odometry
 
 # Odometry class
-class Odometry(Node):
+class OdometryNode(Node):
     def __init__(self, name):
         super().__init__(name)
         self.get_logger().info(self.get_name() + ' is initialized')
         
         # Instance variables 
         self.radius = 0.035                                           # Wheel radius
-        self.wheel_base = 0.145                                        # Distance between wheel
+        self.wheel_base = 0.145                                       # Distance between wheel
         self.ticks_per_rev = 20                                       # Encoder ticks per revolution
         self.metres_per_tick = (2*pi*self.radius)/self.ticks_per_rev  # Wheel distance moved per tick
         self.delta_right_tick = 0                                     # Change in right ticks
@@ -41,16 +43,39 @@ class Odometry(Node):
                 1
             )
 
+        # Create subscription to /joy topic
+        self.joy_sub = self.create_subscription(
+                Joy,
+                'joy',
+                self.reset_pose_callback,
+                1
+            )
+        
+        # Create a publisher to /odom_data topic
+        self.odom_pub = self.create_publisher(Odometry, 'odom_data', 2)
+
         # Create publisher to /odom_data_quat and /odom_data_euler (confirm)
+
+
+    def reset_pose_callback(self, msg):
+        '''
+            The pose of the robot is reset after the 'X' button on the joy gamepad controller 
+            is pressed.
+            
+            The 'X' button corresponds to buttons[3] on the joystick map, with a value of 1 when 
+            pressed and 0 otherwise.
+        '''
+        if msg.buttons[3] == 1:
+            self.x = 0
+            self.y = 0
+            self.theta = 0
+            # Add publisher (?)
 
     def ticks_callback(self, msg):
         '''
 
         '''
 
-        # Initialize Tick message
-        #msg = Tick()        
-        
         # Compute changes in wheel ticks
         self.delta_right_tick = msg.right_tick - self.prev_right_tick
         self.delta_left_tick = msg.left_tick - self.prev_left_tick
@@ -60,9 +85,9 @@ class Odometry(Node):
         self.prev_left_tick = msg.left_tick
 
         # Calculate distances
-        right_whl_dist = self.metres_per_tick * self.delta_right_tick  # Distance traveled by right wheel
-        left_whl_dist = self.metres_per_tick * self.delta_left_tick    # Distance traveled by left wheel
-        centre_dist = (left_whl_dist + right_whl_dist) / 2             # Distance traveled by the robot
+        right_whl_dist = self.metres_per_tick * self.delta_right_tick # Distance traveled by right wheel
+        left_whl_dist = self.metres_per_tick * self.delta_left_tick   # Distance traveled by left wheel
+        centre_dist = (left_whl_dist + right_whl_dist) / 2            # Distance traveled by robot
         
         self.delta_x = centre_dist * cos(self.theta)
         self.delta_y = centre_dist * sin(self.theta)
@@ -80,6 +105,23 @@ class Odometry(Node):
                                 " theta: %.2f" % (theta_d)
                                 )
 
+        # Publish pose values
+        self.odom_data_publisher()
+
+    def odom_data_publisher(self):
+        '''
+        '''
+
+        # Initialize odometry message
+        odom = Odometry()
+        
+        # Assigning only x and yfor now
+        odom.pose.pose.position.x = self.x
+        odom.pose.pose.position.y = self.y
+
+        # Publish odom message to /odom_data
+        self.odom_pub.publish(odom)
+
 # Main function
 def main():
     try:
@@ -87,7 +129,7 @@ def main():
         rclpy.init()
 
         # Create odometry node
-        odometry_node = Odometry('odometry_node')
+        odometry_node = OdometryNode('odometry_node')
 
         # Spin node for callback function
         rclpy.spin(odometry_node)
@@ -104,7 +146,5 @@ def main():
 if __name__ == '__main__':
     main()
 
-
 # NOTE:
 # Comments
-# Add a button to reset the pose(?)

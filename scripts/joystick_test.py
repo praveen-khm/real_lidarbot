@@ -38,15 +38,6 @@ class Robot(Node):
         self.right_motor_dir_pub = self.create_publisher(String, 'right_motor_dir', 1) 
         self.left_motor_dir_pub = self.create_publisher(String, 'left_motor_dir', 1) 
 
-    # Stop motors
-    def stop(self):
-        '''
-        0 - for left motor
-        1 - for right motor
-        '''
-        self.motor.MotorStop(0)
-        self.motor.MotorStop(1)
-    
     # Maximum speed in metres per second (mps) at maximum revolutions per minute (rpm)
     def max_speed(self):
         rpm = (self.left_max_rpm + self.right_max_rpm) / 2.0
@@ -60,7 +51,7 @@ class Robot(Node):
     # Callback function for joy subscription
     def joy_callback(self, msg):
         '''        
-        It translates buttons on a generic game controller into speed and spin values
+        It translates buttons on the  game controller into speed and spin values
         used to set the motor speeds of the robot.
 
         Using:
@@ -68,14 +59,15 @@ class Robot(Node):
         Move right joystick left/right for corresponding left/right motion (rotation)
         Move left joystick forward/backward for corresponding forward/backward motion (translation)
         R2 for emergency stop
-
+        
+        Buttons                 Joystick map  Button movement/click status 
         Rstick left/right         axes[2]    +1 (left)    to -1 (right)
         Lstick forward/backward   axes[1]    +1 (forward) to -1 (backward)
         R2                        buttons[7]  1 pressed, 0 otherwise
         '''
         
-        # Map left/right movement to self.spin, set to zero if below 0.22
-        if abs(msg.axes[2]) > 0.22:
+        # Map left/right movement to self.spin, set to zero if below 0.10
+        if abs(msg.axes[2]) > 0.10:
             self.spin = msg.axes[2]
         else:
             self.spin = 0.0

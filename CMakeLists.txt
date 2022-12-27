@@ -24,6 +24,7 @@ find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/Tick.msg"
+  "action/GoToGoal.action"
 )
 
 # uncomment the following section in order to fill in
@@ -56,6 +57,8 @@ install(PROGRAMS
  scripts/encoder_test.py
  scripts/joystick_test.py
  scripts/odometry_node.py
+ scripts/goal_action_client.py
+ scripts/goal_action_server.py
  DESTINATION lib/${PROJECT_NAME}
 )
 

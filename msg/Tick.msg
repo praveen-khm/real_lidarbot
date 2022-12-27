@@ -1,2 +1,2 @@
-int64 right_tick
-int64 left_tick
+int32 right_tick
+int32 left_tick
