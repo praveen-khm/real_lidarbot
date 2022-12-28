@@ -59,10 +59,10 @@ class GoalActionServer(Node):
         '''
         current_distance = msg.pose.pose.position.x
 
-        # Distance check
-        if current_distance < abs(self.desired_distance.value):
+        # 
+        if (abs(current_distance - self.desired_distance.value)) >  0.030 :
             self.motor.MotorRun(0, self.wheel_direction.value, self.speed.value)
-            self.motor.MotorRun(1, self.wheel_direction.value, self.speed.value)
+            self.motor.MotorRun(1, self.wheel_direction.value, 0.97*self.speed.value) #
         else:
             self.stop_motors()
 

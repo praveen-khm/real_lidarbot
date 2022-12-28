@@ -17,16 +17,18 @@ class Robot(Node):
         super().__init__(name)
         self.get_logger().info(self.get_name() + ' is initialized')
         
-        self.wheel_diameter = 0.07  #
-        self.wheel_base = 0.145     #
-        self.left_max_rpm = 200.0   #
-        self.right_max_rpm = 200.0  #
-        self.motor = Motor()        # Initialize motor driver
+        # Motor and wheel parameters
+        self.wheel_diameter = 0.067 # Diameter of the wheels in metres
+        self.wheel_base = 0.134     # Distance between the centre of the wheels in metres
+        self.left_max_rpm = 200.0   # Number of revolutions per minute of the left motor running at 100% power
+        self.right_max_rpm = 200.0  # Number of revolutions per minute of the right motor running at 100% power
+        self.speed = 0.0            # Initial linear speed in metres/sec
+        self.spin = 0.0             # Initial angular speed in rads/sec
         
-        self.speed = 0.0            #
-        self.spin = 0.0             #
-        
-        # Create subscription to /joy topic of message type Joy
+        # Initialize motor driver
+        self.motor = Motor()     
+
+        # Create a subscription to /joy topic of message type Joy
         self.joy_subscription = self.create_subscription(
                 Joy, 
                 'joy',
@@ -38,17 +40,22 @@ class Robot(Node):
         self.right_motor_dir_pub = self.create_publisher(String, 'right_motor_dir', 1) 
         self.left_motor_dir_pub = self.create_publisher(String, 'left_motor_dir', 1) 
 
-    # Maximum speed in metres per second (mps) at maximum revolutions per minute (rpm)
     def max_speed(self):
+        '''
+        Maximum speed in metres per second (mps) at maximum revolutions per minute (rpm)
+        '''
+
         rpm = (self.left_max_rpm + self.right_max_rpm) / 2.0
         mps = rpm * math.pi * self.wheel_diameter / 60.0
         return mps
 
-    # Rotation in radians per second at max rpm
     def max_twist(self):
+        '''
+        Rotation in radians per second at max rpm
+        '''
+
         return self.max_speed() / self.wheel_diameter
 
-    # Callback function for joy subscription
     def joy_callback(self, msg):
         '''        
         It translates buttons on the  game controller into speed and spin values
@@ -83,56 +90,57 @@ class Robot(Node):
             self.speed = 0.0
             self.spin = 0.0
 
-        #
         self.set_motor_speeds()
         
-    #
     def set_motor_speeds(self):
-        # First figure out the speed of each wheel based on spin: each wheel
-        # covers self._wheel_base meters in one radian, so the target speed
-        # for each wheel in meters per sec is spin (radians/sec) times
-        # wheel_base divided by wheel_diameter
-
+        '''
+        Figures out the speed of each wheel based on spin: each wheel
+        covers self.wheel_base meters in one radian, so the target speed
+        for each wheel in meters per sec is spin (radians/sec) times
+        wheel_base divided by wheel_diameter
+        '''
         right_twist_mps = self.spin * self.wheel_base / self.wheel_diameter
         left_twist_mps = -1.0 * self.spin * self.wheel_base / self.wheel_diameter
         
-        # Now add in forward motion.
-        left_mps = self.speed + left_twist_mps
+        # Now add in linear motion
         right_mps = self.speed + right_twist_mps
+        left_mps = self.speed + left_twist_mps
 
         # Convert meters/sec into RPM: for each revolution, a wheel travels
         # pi * diameter meters, and each minute has 60 seconds.
-        left_target_rpm = (left_mps * 60.0) / (math.pi * self.wheel_diameter)
         right_target_rpm = (right_mps * 60.0) /  (math.pi * self.wheel_diameter)
+        left_target_rpm = (left_mps * 60.0) / (math.pi * self.wheel_diameter)
         
-        left_percentage = (left_target_rpm / self.left_max_rpm) * 100.0
-        right_percentage = (right_target_rpm / self.right_max_rpm) * 100.0
+        # Scale target motor speeds 
+        right_motor_speed = (right_target_rpm / self.right_max_rpm) * 100.0
+        left_motor_speed = (left_target_rpm / self.left_max_rpm) * 100.0
 
-        # clip to +- 40%
-        left_percentage = max(min(left_percentage, 40.0), -40.0)
-        right_percentage = max(min(right_percentage, 40.0), -40.0)
+        # Clip speeds to +/- 60%
+        right_motor_speed = max(min(right_motor_speed, 60.0), -60.0)
+        left_motor_speed = max(min(left_motor_speed, 60.0), -60.0)
         
-        #
-        index_r = String()
-        index_l = String()
-
-        if right_percentage > 0:
-            index_r.data = 'forward'
+        # Initialize string messages
+        right_motor_direction = String()
+        left_motor_direction = String()
+        
+        # Set motor directions
+        if right_motor_speed > 0:
+            right_motor_direction.data = 'forward'
         else:
-            index_r.data = 'backward' 
+            right_motor_direction.data = 'backward' 
 
-        if left_percentage > 0:
-            index_l.data = 'forward' 
+        if left_motor_speed > 0:
+            left_motor_direction.data = 'forward' 
         else:
-            index_l.data = 'backward'
+            left_motor_direction.data = 'backward'
 
         # Publish motor directions
-        self.right_motor_dir_pub.publish(index_r)
-        self.left_motor_dir_pub.publish(index_l)
+        self.right_motor_dir_pub.publish(right_motor_direction)
+        self.left_motor_dir_pub.publish(left_motor_direction)
         
-        #
-        self.motor.MotorRun(0, index_l.data, abs(left_percentage))
-        self.motor.MotorRun(1, index_r.data, abs(right_percentage))
+        # Run motors with specified direction and speeds
+        self.motor.MotorRun(0, left_motor_direction.data, abs(left_motor_speed))
+        self.motor.MotorRun(1, right_motor_direction.data, abs(right_motor_speed))
 
 # Main function
 def main():
@@ -160,3 +168,4 @@ if __name__ == '__main__':
 
 # NOTES: 
 # Comments, comments
+# Rename class and node
