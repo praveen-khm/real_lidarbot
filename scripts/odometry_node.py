@@ -4,7 +4,7 @@
     Node description
 '''
 
-from math import pi, cos, sin, floor
+from math import pi, cos, sin, floor, degrees
 from real_lidarbot.msg import Tick
 import rclpy
 from rclpy.node import Node
@@ -19,7 +19,7 @@ class OdometryNode(Node):
         
         # Instance variables 
         self.radius = 0.0335                                          # Wheel radius
-        self.wheel_base = 0.134                                       # Distance between wheel
+        self.wheel_base = 0.134                                       # Distance between wheels
         self.ticks_per_rev = 20                                       # Encoder ticks per revolution
         self.metres_per_tick = (2*pi*self.radius)/self.ticks_per_rev  # Wheel distance moved per tick
         self.delta_right_tick = 0                                     # Change in right ticks
@@ -97,7 +97,7 @@ class OdometryNode(Node):
         self.theta += self.delta_theta
 
         # Convert from radians to degrees
-        theta_d = floor(self.theta * 180 / pi) 
+        theta_d = degrees(self.theta)
 
         # Log data to console
         self.get_logger().info("x: %.3f" % (self.x) + 
@@ -118,7 +118,7 @@ class OdometryNode(Node):
         # Assign pose parameters to odom message
         odom.pose.pose.position.x = self.x
         odom.pose.pose.position.y = self.y
-        # odom.pose.pose.orientation.z = self.theta
+        odom.pose.pose.orientation.z = self.theta # confirm assignment
 
         # Publish odom message to /odom_data
         self.odom_pub.publish(odom)

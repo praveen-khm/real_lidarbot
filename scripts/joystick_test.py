@@ -40,25 +40,9 @@ class Robot(Node):
         self.right_motor_dir_pub = self.create_publisher(String, 'right_motor_dir', 1) 
         self.left_motor_dir_pub = self.create_publisher(String, 'left_motor_dir', 1) 
 
-    def max_speed(self):
-        '''
-        Maximum speed in metres per second (mps) at maximum revolutions per minute (rpm)
-        '''
-
-        rpm = (self.left_max_rpm + self.right_max_rpm) / 2.0
-        mps = rpm * math.pi * self.wheel_diameter / 60.0
-        return mps
-
-    def max_twist(self):
-        '''
-        Rotation in radians per second at max rpm
-        '''
-
-        return self.max_speed() / self.wheel_diameter
-
     def joy_callback(self, msg):
         '''        
-        It translates buttons on the  game controller into speed and spin values
+        It translates buttons on the game controller into speed and spin values
         used to set the motor speeds of the robot.
 
         Using:
@@ -102,9 +86,15 @@ class Robot(Node):
         right_twist_mps = self.spin * self.wheel_base / self.wheel_diameter
         left_twist_mps = -1.0 * self.spin * self.wheel_base / self.wheel_diameter
         
+        print('spin right: ', right_twist_mps)
+        print('\tspin left: ', left_twist_mps)
+
         # Now add in linear motion
         right_mps = self.speed + right_twist_mps
         left_mps = self.speed + left_twist_mps
+
+        print('linear right: ', right_mps)
+        print('\tlinear left: ', left_mps)
 
         # Convert meters/sec into RPM: for each revolution, a wheel travels
         # pi * diameter meters, and each minute has 60 seconds.
