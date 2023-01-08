@@ -1,8 +1,0 @@
-# Desired goal location coordinates (x, y)
-float32[] goal
----
-# Linear displacement to the robot start position
-float32[] delta
----
-# Coordinates as robot moves towards the goal location
-float32[] remaining

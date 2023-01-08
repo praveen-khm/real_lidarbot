@@ -4,7 +4,8 @@
     Node description
 '''
 
-from math import atan2, sqrt, pi 
+from time import sleep, process_time
+from math import atan2, sqrt, pi, cos, sin 
 from real_lidarbot.msg import Tick
 from real_lidarbot.motor import Motor
 import rclpy
@@ -13,24 +14,31 @@ from sensor_msgs.msg import Joy
 from std_msgs.msg import String
 from nav_msgs.msg import Odometry
 
-# Goal action server class
-class GoalActionServer(Node):
+# Go to goal class
+class GoToGoal(Node):
     def __init__(self, name):
         super().__init__(name)
         self.get_logger().info(self.get_name() + ' is initialized')
 
         # Declare ROS parameters
-        self.declare_parameter('distance')
-        self.desired_distance = self.get_parameter('distance')
-        
+        self.declare_parameter('coordinates') 
+        self.declare_parameter('coordinate_pairs')
+
+        self.coordinates = self.get_parameter('coordinates')
+        self.coordinate_pairs = self.get_parameter('coordinate_pairs').value
+
         #
         self.wheel_diameter = 0.067
         self.wheel_base = 0.134
         self.left_max_rpm = 200.0
-        self.right_max_rpm = 200.0
+        self.right_max_rpm = 195.0 #
 
         self.linear_speed = 0.0
         self.angular_speed = 0.0
+        self.counter = 0
+
+        self.I = 0.0
+        self.D = 0.0
 
         # Initialize motor driver
         self.motor = Motor() 
@@ -40,7 +48,7 @@ class GoalActionServer(Node):
                 Odometry,
                 'odom_data',
                 self.odom_callback,
-                5
+                5 
             )
         
         # Create a subscription to /joy topic
@@ -65,57 +73,68 @@ class GoalActionServer(Node):
 
     def kill_switch_callback(self, msg):
         '''
-        This function abruptly stops the motors and shuts down the ROS python 
-        client when  once the 'A' button on the joy game controller is pressed. This is an 
-        emergency safety feature in case something goes wrong.
+        This function abruptly stops the motors and raises a SystemExit exception, that is 
+        handled towards the end of thie script, once the 'A' button on the joy game controller is 
+        pressed. This is an emergency safety feature in case something goes wrong.
 
         'A' button corresponds to buttons[2] on the joystick map, with a value of 1 when pressed and
         0 otherwise.
         '''
         if msg.buttons[2] == 1:
             self.stop_motors()
-            print('Emergency stop!')
+            self.get_logger().info('Emergency Stop!')
+            raise SystemExit
 
-            # Shutdown ROS python client
-            rclpy.shutdown()
-
-    def odom_callback(self, msg): # rename callback(?)
+    def odom_callback(self, msg): 
         '''
         '''
-        
-        x_goal = self.desired_distance.value[0]
-        y_goal = self.desired_distance.value[1]
 
-        #print(len(self.desired_distance))
-        x_curr = msg.pose.pose.position.x           # Current x coordinate
-        y_curr = msg.pose.pose.position.y           # Current y coordinate
-        theta_curr = msg.pose.pose.orientation.z    #
+        global start_time        
+
+        x_goal = self.coordinates.value[self.counter*2]     # Goal x coordinate
+        y_goal = self.coordinates.value[(self.counter*2)+1] # Goal y coordinate
         
-        K_linear = 0.8 # 0.95
+        x_curr = msg.pose.pose.position.x                   # Current x coordinate
+        y_curr = msg.pose.pose.position.y                   # Current y coordinate
+        theta_curr = msg.pose.pose.orientation.z            # Current theta angle in radians
+
+        # Euclidean distance between goal and current x,y coordinates
         euclid_dist = abs(sqrt(((x_goal - x_curr) ** 2) + ((y_goal - y_curr) ** 2)))
-        self.linear_speed = K_linear * euclid_dist 
+        K_p_linear = 1.4 #
 
-        K_angular = 0.4
-        desired_angle = atan2(y_goal - y_curr, x_goal - x_curr) # rename var later?        
-        self.angular_speed = K_angular * (desired_angle - theta_curr)
+        self.linear_speed = K_p_linear * euclid_dist 
 
-        if euclid_dist > 0.01:
+        # Angular PID controller gains
+        K_p_angular = 0.45
+        K_i = 0.0055
+        K_d = 0.04
+
+        theta_goal = atan2(y_goal - y_curr, x_goal - x_curr)
+        angle_error = theta_goal - theta_curr
+        angle_error = atan2(sin(angle_error), cos(angle_error))
+        
+        stop_time = process_time() # Stop timer
+        
+        self.I = self.I + angle_error * (stop_time - start_time)
+        self.D = (angle_error - self.D) / (stop_time - start_time)
+        self.angular_speed = K_p_angular * angle_error + K_i * self.I + K_d * self.D
+
+        self.D = angle_error
+
+        if euclid_dist > 0.04: 
             self.set_motor_speeds()
         else:
-            print(euclid_dist)
-            self.stop_motors()
-
-        # Multiple waypoints
-
-        #current_distance = msg.pose.pose.position.x
-
-        # 
-        #if (abs(current_distance - self.desired_distance.value)) >  0.030 :
-        #    self.motor.MotorRun(0, self.wheel_direction.value, self.speed.value)
-        #    self.motor.MotorRun(1, self.wheel_direction.value, 0.97*self.speed.value) #
-        #else:
-        #    self.stop_motors()
-
+            self.counter += 1
+            #
+            if self.counter != self.coordinate_pairs:
+                self.stop_motors()
+                self.get_logger().info('Moving to the next waypoint ...')
+                sleep(2)
+            else:
+                self.stop_motors()
+                self.get_logger().info('Goal reached!')
+                raise SystemExit
+       
     def set_motor_speeds(self):
         '''
         '''
@@ -129,14 +148,14 @@ class GoalActionServer(Node):
 
         # Convert meters/sec into RPM: for each revolution, a wheel travels
         # pi * diameter meters, and each minute has 60 seconds.
-        right_target_rpm = (right_mps * 60.0) /  (pi * self.wheel_diameter)
+        right_target_rpm = (right_mps * 60.0) / (pi * self.wheel_diameter)
         left_target_rpm = (left_mps * 60.0) / (pi * self.wheel_diameter)
         
         # Scale target motor speeds 
         right_motor_speed = (right_target_rpm / self.right_max_rpm) * 100.0
         left_motor_speed = (left_target_rpm / self.left_max_rpm) * 100.0
         
-        # Clip speeds to +/- 60%
+        # Clip speeds to +/- 65%
         right_motor_speed = max(min(right_motor_speed, 65.0), -65.0)
         left_motor_speed = max(min(left_motor_speed, 65.0), -65.0)
         
@@ -169,17 +188,31 @@ def main():
         # Initialize ROS python client
         rclpy.init()
 
-        # Create goal action server node
-        goal_act_server_node = GoalActionServer('goal_act_server_node')
+        # Create go to goal node
+        go_to_goal_node = GoToGoal('go_to_goal_node')
+
+        # Start timer
+        global start_time
+        start_time = process_time()
 
         # Spin node for callback function 
-        rclpy.spin(goal_act_server_node)
+        rclpy.spin(go_to_goal_node)
+
+    except SystemExit:
+        rclpy.logging.get_logger("Destroying").info(go_to_goal_node.get_name())
+        
+        # Destroy node
+        go_to_goal_node.destroy_node()
+
+        # Shutdown ROS python client
+        rclpy.shutdown()
 
     # On executing Ctrl+C in the terminal
     except KeyboardInterrupt:
+        rclpy.logging.get_logger("KeyboardInterrupt, destroying").info(go_to_goal_node.get_name())
+
         # Destroy node
-        goal_act_server_node.destroy_node()
-        print('\ngoal_act_server_node destroyed with Ctrl+C')
+        go_to_goal_node.destroy_node()
 
         # Shutdown ROS python client
         rclpy.shutdown()

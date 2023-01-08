@@ -21,7 +21,7 @@ class Robot(Node):
         self.wheel_diameter = 0.067 # Diameter of the wheels in metres
         self.wheel_base = 0.134     # Distance between the centre of the wheels in metres
         self.left_max_rpm = 200.0   # Number of revolutions per minute of the left motor running at 100% power
-        self.right_max_rpm = 200.0  # Number of revolutions per minute of the right motor running at 100% power
+        self.right_max_rpm = 195.0  # Number of revolutions per minute of the right motor running at 100% power
         self.speed = 0.0            # Initial linear speed in metres/sec
         self.spin = 0.0             # Initial angular speed in rads/sec
         
@@ -86,15 +86,9 @@ class Robot(Node):
         right_twist_mps = self.spin * self.wheel_base / self.wheel_diameter
         left_twist_mps = -1.0 * self.spin * self.wheel_base / self.wheel_diameter
         
-        print('spin right: ', right_twist_mps)
-        print('\tspin left: ', left_twist_mps)
-
         # Now add in linear motion
         right_mps = self.speed + right_twist_mps
         left_mps = self.speed + left_twist_mps
-
-        print('linear right: ', right_mps)
-        print('\tlinear left: ', left_mps)
 
         # Convert meters/sec into RPM: for each revolution, a wheel travels
         # pi * diameter meters, and each minute has 60 seconds.
@@ -105,9 +99,9 @@ class Robot(Node):
         right_motor_speed = (right_target_rpm / self.right_max_rpm) * 100.0
         left_motor_speed = (left_target_rpm / self.left_max_rpm) * 100.0
 
-        # Clip speeds to +/- 60%
-        right_motor_speed = max(min(right_motor_speed, 60.0), -60.0)
-        left_motor_speed = max(min(left_motor_speed, 60.0), -60.0)
+        # Clip speeds to +/- 50%
+        right_motor_speed = max(min(right_motor_speed, 50.0), -50.0)
+        left_motor_speed = max(min(left_motor_speed, 50.0), -50.0)
         
         # Initialize string messages
         right_motor_direction = String()
@@ -146,9 +140,10 @@ def main():
 
     # On executing Ctrl+C in the terminal
     except KeyboardInterrupt:
+        rclpy.logging.get_logger("KeyboardInterrupt, destroying").info(robot.get_name())
+
         # Destroy node
         robot.destroy_node()
-        print('\nlidar_bot joystick test node destroyed')
 
         # Shutdown ROS python client
         rclpy.shutdown()
