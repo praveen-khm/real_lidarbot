@@ -1,12 +1,15 @@
 #!/usr/bin/python3
 
 '''
-    Node description
+    The go to goal node accepts coordinates and the proportionate number of coordinate pairs parameters to inform the robot
+    on the positions it should move to.  
+    
+    The node subscribes to /odom_data and /joy topics, to calculate motor speeds and stop the motors, respectively. 
+    It also publishes the right and left wheel directions on topics /right_motor_dir and /left_motor_dir correspondingly.
 '''
 
 from time import sleep, process_time
 from math import atan2, sqrt, pi, cos, sin 
-from real_lidarbot.msg import Tick
 from real_lidarbot.motor import Motor
 import rclpy
 from rclpy.node import Node
@@ -22,23 +25,22 @@ class GoToGoal(Node):
 
         # Declare ROS parameters
         self.declare_parameter('coordinates') 
-        self.declare_parameter('coordinate_pairs')
+        self.declare_parameter('coordinate_pairs') 
 
         self.coordinates = self.get_parameter('coordinates')
         self.coordinate_pairs = self.get_parameter('coordinate_pairs').value
+        
+        self.counter = 0                # Loop variable to keep track of the number of coordinate pairs
 
-        #
-        self.wheel_diameter = 0.067
-        self.wheel_base = 0.134
-        self.left_max_rpm = 200.0
-        self.right_max_rpm = 195.0 #
-
-        self.linear_speed = 0.0
-        self.angular_speed = 0.0
-        self.counter = 0
-
-        self.I = 0.0
-        self.D = 0.0
+        # Instance variables
+        self.wheel_diameter = 0.067     # Wheel diameter [metres]
+        self.wheel_base = 0.134         # Distance between wheels [metres]
+        self.left_max_rpm = 200.0       # Max revolutions per minute of the left motor
+        self.right_max_rpm = 195.0      # Max revolutions per minute of the right motor
+        self.linear_speed = 0.0         # Linear speed [metres/sec]
+        self.angular_speed = 0.0        # Angular speed [rads/sec]
+        self.I = 0.0                    # Angular integral error
+        self.D = 0.0                    # Angular derivative error
 
         # Initialize motor driver
         self.motor = Motor() 
@@ -73,12 +75,12 @@ class GoToGoal(Node):
 
     def kill_switch_callback(self, msg):
         '''
-        This function abruptly stops the motors and raises a SystemExit exception, that is 
-        handled towards the end of thie script, once the 'A' button on the joy game controller is 
-        pressed. This is an emergency safety feature in case something goes wrong.
+            This function abruptly stops the motors and raises a SystemExit exception, that is 
+            handled towards the end of thie script, once the 'A' button on the joy game controller is 
+            pressed. This is an emergency safety feature in case something goes wrong.
 
-        'A' button corresponds to buttons[2] on the joystick map, with a value of 1 when pressed and
-        0 otherwise.
+            'A' button corresponds to buttons[2] on the joystick map, with a value of 1 when pressed and
+            0 otherwise.
         '''
         if msg.buttons[2] == 1:
             self.stop_motors()
@@ -87,8 +89,9 @@ class GoToGoal(Node):
 
     def odom_callback(self, msg): 
         '''
+            This function calculates the linear and angular speeds used to set the robot's motor speeds
+            to move the robot from its current set of coordinates to the desired goal coordinates.
         '''
-
         global start_time        
 
         x_goal = self.coordinates.value[self.counter*2]     # Goal x coordinate
@@ -100,8 +103,9 @@ class GoToGoal(Node):
 
         # Euclidean distance between goal and current x,y coordinates
         euclid_dist = abs(sqrt(((x_goal - x_curr) ** 2) + ((y_goal - y_curr) ** 2)))
-        K_p_linear = 1.4 #
+        K_p_linear = 1.4 # Proportial gain for linear speed
 
+        # Calculate linear_speed
         self.linear_speed = K_p_linear * euclid_dist 
 
         # Angular PID controller gains
@@ -109,23 +113,35 @@ class GoToGoal(Node):
         K_i = 0.0055
         K_d = 0.04
 
+        # Angle from robot to goal
         theta_goal = atan2(y_goal - y_curr, x_goal - x_curr)
+
+        # Error between the goal angle and robot's angle
         angle_error = theta_goal - theta_curr
         angle_error = atan2(sin(angle_error), cos(angle_error))
         
         stop_time = process_time() # Stop timer
         
+        # Calculate integral and derivative angular error terms
         self.I = self.I + angle_error * (stop_time - start_time)
         self.D = (angle_error - self.D) / (stop_time - start_time)
-        self.angular_speed = K_p_angular * angle_error + K_i * self.I + K_d * self.D
 
+        # Calculate angular_speed
+        self.angular_speed = K_p_angular * angle_error + K_i * self.I + K_d * self.D
+        
+        # Assign derivative term for the next callback
         self.D = angle_error
 
+        '''
+            Move the robot until the euclidean distance between is less than 0.04 then robot moves to the 
+            next set of coordinates (or waypoint) if there is one or stops the robot because the goal location 
+            has been reached.
+        '''
         if euclid_dist > 0.04: 
             self.set_motor_speeds()
         else:
             self.counter += 1
-            #
+            # Check for new coordinates or waypoints
             if self.counter != self.coordinate_pairs:
                 self.stop_motors()
                 self.get_logger().info('Moving to the next waypoint ...')
@@ -137,8 +153,12 @@ class GoToGoal(Node):
        
     def set_motor_speeds(self):
         '''
+            Sets the motor speed of each wheel based on angular_speed: 
+            
+            Each wheel covers self.wheel_base meters in one radian, so the target speed for each wheel in meters per sec is 
+            angular_speed * wheel_base / wheel_diameter.
         '''
-
+        # Wheel angular motion
         right_twist_mps = self.angular_speed * self.wheel_base / self.wheel_diameter
         left_twist_mps = -1.0 * self.angular_speed * self.wheel_base / self.wheel_diameter
         
@@ -219,7 +239,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-# NOTES:
-# Comments

@@ -29,11 +29,11 @@ class ImuNode(Node):
 
     def timer_callback(self):
         '''
-        This method is called every 0.05 seconds to access the accelerometer and gyroscope/angular velocity 
-        data from MPU6050 and publish the data to the 'imu/data' topic. 
+            This function is called every 0.05 seconds to access the accelerometer and gyroscope/angular velocity 
+            data from MPU6050 and publish the data to the 'imu/data' topic. 
 
-        Acceleromter data unit - m/s^2
-        Gyroscope data unit   - rad/sec
+            Acceleromter data unit - m/s^2
+            Gyroscope data unit    - rad/sec
         '''
 
         # Initialize Imu message
@@ -80,12 +80,10 @@ if __name__ == '__main__':
 
     # On Ctrl+C executed in the terminal
     except KeyboardInterrupt:
+        rclpy.logging.get_logger("KeyboardInterrupt, destroying").info(imu_node.get_name())
+
         # Destroy node
         imu_node.destroy_node()
 
         # Shutdown ROS python client
         rclpy.shutdown()
-
-# TO-DO:
-# Adjust timer period later
-# Disable data logging?

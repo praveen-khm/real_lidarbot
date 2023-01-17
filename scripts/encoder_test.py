@@ -1,6 +1,9 @@
 #!/usr/bin/python3
 
-# Program to count the number of wheel encoder ticks/pulses
+'''
+    This scripts counts the number of wheel encoder ticks/pulses in the forward or backward direction, not both, 
+    as the wheel(s) is/are turned and prints the pulses in the terminal.
+'''
 
 import signal
 import sys
@@ -32,7 +35,6 @@ def signal_handler(sig, frame):
     sys.exit(0)
 
 if __name__ == '__main__':
-
     # Set mode for GPIO pins
     GPIO.setmode(GPIO.BCM)
 

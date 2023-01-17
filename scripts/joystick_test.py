@@ -1,7 +1,11 @@
 #!/usr/bin/python3
 
 '''
-    Node description
+    The joystick test node subscribes to the joystick button commands, received on the /joy topic, 
+    to accordingly set the speeds of the motors. 
+    
+    This node also publishes the right and left wheel directions on topics /right_motor_dir 
+    and /left_motor_dir respectively.
 '''
 
 from real_lidarbot.motor import Motor
@@ -9,21 +13,21 @@ import math
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
-from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Joy
 
-class Robot(Node):
+# JoystickPad class
+class JoystickPad(Node):
     def __init__(self, name):
         super().__init__(name)
         self.get_logger().info(self.get_name() + ' is initialized')
         
-        # Motor and wheel parameters
-        self.wheel_diameter = 0.067 # Diameter of the wheels in metres
-        self.wheel_base = 0.134     # Distance between the centre of the wheels in metres
-        self.left_max_rpm = 200.0   # Number of revolutions per minute of the left motor running at 100% power
-        self.right_max_rpm = 195.0  # Number of revolutions per minute of the right motor running at 100% power
-        self.speed = 0.0            # Initial linear speed in metres/sec
-        self.spin = 0.0             # Initial angular speed in rads/sec
+        # Instance variables
+        self.wheel_diameter = 0.067     # Wheel diameter [metres]
+        self.wheel_base = 0.134         # Distance between wheels [metres]
+        self.left_max_rpm = 200.0       # Max revolutions per minute of the left motor
+        self.right_max_rpm = 195.0      # Max revolutions per minute of the right motor
+        self.linear_speed = 0.0         # Initial linear speed [metres/sec]
+        self.angular_speed = 0.0        # Initial angular speed [rads/sec]
         
         # Initialize motor driver
         self.motor = Motor()     
@@ -42,53 +46,54 @@ class Robot(Node):
 
     def joy_callback(self, msg):
         '''        
-        It translates buttons on the game controller into speed and spin values
-        used to set the motor speeds of the robot.
+            It translates buttons on the game controller into linear_speed and angular_speed values
+            used to set the motor speeds of the robot.
 
-        Using:
+            Using:
 
-        Move right joystick left/right for corresponding left/right motion (rotation)
-        Move left joystick forward/backward for corresponding forward/backward motion (translation)
-        R2 for emergency stop
-        
-        Buttons                 Joystick map  Button movement/click status 
-        Rstick left/right         axes[2]    +1 (left)    to -1 (right)
-        Lstick forward/backward   axes[1]    +1 (forward) to -1 (backward)
-        R2                        buttons[7]  1 pressed, 0 otherwise
+            Move right joystick left/right for corresponding left/right motion (rotation)
+            Move left joystick forward/backward for corresponding forward/backward motion (translation)
+            R2 for emergency stop
+            
+            Buttons                 Joystick map  Button movement/click status 
+            Rstick left/right         axes[2]    +1 (left)    to -1 (right)
+            Lstick forward/backward   axes[1]    +1 (forward) to -1 (backward)
+            R2                        buttons[7]  1 pressed, 0 otherwise
         '''
         
-        # Map left/right movement to self.spin, set to zero if below 0.10
+        # Map left/right movement to self.angular_speed, set to zero if below 0.10
         if abs(msg.axes[2]) > 0.10:
-            self.spin = msg.axes[2]
+            self.angular_speed = msg.axes[2]
         else:
-            self.spin = 0.0
+            self.angular_speed = 0.0
 
-        # Map forward/backward movement to self.speed, set to zero if below 0.10
+        # Map forward/backward movement to self.linear_speed, set to zero if below 0.10
         if abs(msg.axes[1]) > 0.10:
-            self.speed = msg.axes[1]
+            self.linear_speed = msg.axes[1]
         else:
-            self.speed = 0.0
+            self.linear_speed = 0.0
 
-        # Set both self.speed and self.spin to zero when R2 button is pressed
+        # Set both self.linear_speed and self.angular_speed to zero when R2 button is pressed
         if msg.buttons[7] == 1:
-            self.speed = 0.0
-            self.spin = 0.0
+            self.linear_speed = 0.0
+            self.angular_speed = 0.0
 
         self.set_motor_speeds()
         
     def set_motor_speeds(self):
         '''
-        Figures out the speed of each wheel based on spin: each wheel
-        covers self.wheel_base meters in one radian, so the target speed
-        for each wheel in meters per sec is spin (radians/sec) times
-        wheel_base divided by wheel_diameter
+            Sets the motor speed of each wheel based on angular_speed: 
+            
+            Each wheel covers self.wheel_base meters in one radian, so the target speed for each wheel in meters per sec is 
+            angular_speed * wheel_base / wheel_diameter.
         '''
-        right_twist_mps = self.spin * self.wheel_base / self.wheel_diameter
-        left_twist_mps = -1.0 * self.spin * self.wheel_base / self.wheel_diameter
+        # Wheel angular motion
+        right_twist_mps = self.angular_speed * self.wheel_base / self.wheel_diameter
+        left_twist_mps = -1.0 * self.angular_speed * self.wheel_base / self.wheel_diameter
         
         # Now add in linear motion
-        right_mps = self.speed + right_twist_mps
-        left_mps = self.speed + left_twist_mps
+        right_mps = self.linear_speed + right_twist_mps
+        left_mps = self.linear_speed + left_twist_mps
 
         # Convert meters/sec into RPM: for each revolution, a wheel travels
         # pi * diameter meters, and each minute has 60 seconds.
@@ -133,24 +138,20 @@ def main():
         rclpy.init()
 
         # Create robot node
-        robot = Robot('lidar_bot')
+        joystick = JoystickPad('joystick_test')
 
         # Wait for incoming commands
-        rclpy.spin(robot)
+        rclpy.spin(joystick)
 
     # On executing Ctrl+C in the terminal
     except KeyboardInterrupt:
-        rclpy.logging.get_logger("KeyboardInterrupt, destroying").info(robot.get_name())
+        rclpy.logging.get_logger("KeyboardInterrupt, destroying").info(joystick.get_name())
 
         # Destroy node
-        robot.destroy_node()
+        joystick.destroy_node()
 
         # Shutdown ROS python client
         rclpy.shutdown()
 
 if __name__ == '__main__':
     main()
-
-# NOTES: 
-# Comments, comments
-# Rename class and node

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 '''
-    This encoder node subscribes to topics /right_motor_dir and /left_motor_dir in order to 
+    The encoder node subscribes to topics /right_motor_dir and /left_motor_dir in order to 
     publish to the /ticks topic which contains message fields for right motor pulses/ticks.
 '''
 
@@ -84,14 +84,20 @@ class Encoder(Node):
        self.timer = self.create_timer(timer_period, self.timer_callback)
 
     def right_dir_callback(self, msg):
+        '''Assign the right wheel direction obtained from the /right_motor_dir topic. '''
         global right_wheel_direction
         right_wheel_direction = msg.data
 
     def left_dir_callback(self, msg):
+        ''' Assign the left wheel direction obtained from the /left_motor_dir topic. '''
         global left_wheel_direction
         left_wheel_direction = msg.data
 
     def timer_callback(self):
+        '''
+            This function executes every 0.05 seconds to assign the wheel pulse counts to a tick 
+            message and publishes this message to the /ticks topic.
+        '''
         global right_wheel_pulse_count, left_wheel_pulse_count
         
         # Initialize tick message
@@ -109,8 +115,9 @@ def signal_handler(sig, frame):
     # Clean up GPIO pins
     GPIO.cleanup()
 
+    rclpy.logging.get_logger("KeyboardInterrupt, destroying").info(encoder_node.get_name())
+
     # Destroy node
-    print('\nencoder_node destroyed')
     encoder_node.destroy_node()
     
     # Shutdown ROS python client

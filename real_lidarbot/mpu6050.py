@@ -256,4 +256,3 @@ class mpu6050:
         gyro = self.get_gyro_data()
 
         return [accel, gyro, temp]
-
