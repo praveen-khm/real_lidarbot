@@ -2,7 +2,7 @@
 
 '''
     The encoder node subscribes to topics /right_motor_dir and /left_motor_dir in order to 
-    publish to the /ticks topic which contains message fields for right motor pulses/ticks.
+    publish to the /ticks topic which contains message fields for right and left motor pulses/ticks.
 '''
 
 import signal

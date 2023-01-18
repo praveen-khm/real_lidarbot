@@ -4,6 +4,11 @@ ROS2 Foxy, running on Ubuntu server 20.04 on a Raspberry Pi 4, is employed in co
 
 (Work in progress)
 
+## Part list
+
+## Wiring diagram
+
+
 ## Assembly
 
 <p align="center">
@@ -20,3 +25,12 @@ ROS2 Foxy, running on Ubuntu server 20.04 on a Raspberry Pi 4, is employed in co
 <p align="center">
   <img src=images/side_view.jpg width="400">
 </p>
+
+## Installation
+
+## Package Overview
+
+## Go to goal (with only wheel encoders)
+### (0.5, 0.5) &rarr; (0.0, 0.0)
+
+### (0.8, 0.0) &rarr; (0.8, 0.8) &rarr; (0.0, 0.8) &rarr; (0.0, 0.0)

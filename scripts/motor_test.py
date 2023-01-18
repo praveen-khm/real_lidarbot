@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 '''
-    Script to test the motors
+    Script to test the motors.
 '''
 
 from real_lidarbot.motor import Motor
