@@ -70,11 +70,11 @@ The screw terminal blocks on the Motor Driver HAT ([shown below](https://www.wav
 
 | Motor Driver HAT pin | Connected to| 
 | -- | -- |
-| MA1 | (Left motor)| 
+| MA1 | Red wire (Left motor)| 
 | MA2 | Black wire (Left motor)| 
 | GND | Black wire (battery holder) | 
 | VIN | Red wire (battery holder) | 
-| MB1 | (Right motor)| 
+| MB1 | Red wire(Right motor)| 
 | MB2 | Black wire (Right motor)| 
 
 <p align="center">
