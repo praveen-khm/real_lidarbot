@@ -26,8 +26,6 @@ The following components were used in this project:
 |14| Female to Female Dupoint jumper cables|
 |15| Spare wires|
 
-Loose wires
-
 Some other tools or parts used in the project are as follows:
 
 | | Tool/Part |
@@ -68,7 +66,7 @@ The right and left photo interrupter sensors are connected to GPIO pins as follo
 | VCC | 5V | 5V |
 | GND | GND | GND |
 
-The screw terminal blocks on the Motor Driver HAT (shown below) are connected to the motor wires and battery holder cables as follows: 
+The screw terminal blocks on the Motor Driver HAT ([shown below](https://www.waveshare.com/wiki/Motor_Driver_HAT)) are connected to the motor wires and battery holder cables as follows: 
 
 | Motor Driver HAT pin | Connected to| 
 | -- | -- |
