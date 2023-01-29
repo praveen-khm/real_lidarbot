@@ -25,6 +25,7 @@ The following components were used in this project:
 |13| 3 x 18650 batteries to power Motor Driver HAT|
 |14| Female to Female Dupoint jumper cables|
 |15| Spare wires|
+|16| On/Off switch (included in robot chassis kit)|
 
 Some other tools or parts used in the project are as follows:
 
@@ -81,7 +82,7 @@ The screw terminal blocks on the Motor Driver HAT ([shown below](https://www.wav
   <img title='Motor Driver HAT' src=images/Motor_Driver_HAT.png width="500">
 </p>
 
-Should the wheel(s) move in the direction opposite of what is expected, exchange the respective motor cables screwed into the terminal blocks.
+Solder the cables (provided) to the motors. Might need to use spare wires if the provided ones are too short to reach the motor hat. Should the wheel(s) move in the direction opposite of what is expected, exchange the respective motor cables screwed into the terminal blocks.
 
 <p align="center">
   <img title='MPU6050' src=images/mpu6050.jpg width="400">
@@ -94,6 +95,8 @@ Should the wheel(s) move in the direction opposite of what is expected, exchange
   <img title='Top View' src=images/top_view.jpg width="400">
 </p>
 
+Finally, the RPLIDAR A1 sensor and the Intel RealSense D415 depth camera are plugged into the USB ports of the Raspberry Pi 4.
+
 <p align="center">
   <img title='Side View' src=images/side_view.jpg width="400">
 </p>
@@ -103,8 +106,50 @@ Should the wheel(s) move in the direction opposite of what is expected, exchange
 
 ## Package Overview
 
+## Tests
+
+### Motor test
+```
+ros2 run real_lidarbot motor_test.py
+```
+
+### Encoder test
+```
+ros2 run real_lidarbot encoder_test.py
+```
+
+## Joystick mode/test
+
+Run on host machine:
+```
+ros2 run joy joy_node
+```
+
+Run on remote machine/lidarbot:
+
+```
+ros2 run real_lidarbot joystick_test.py
+```
+
 ## Go to goal (with only wheel encoders)
 ### (0.0, 0.0) &rarr; (0.5, 0.5) &rarr; (0.0, 0.0)
+
+Run on host machine:
+```
+ros2 run joy joy_node
+```
+
+Run on remote machine/lidarbot:
+
+```
+ros2 launch real_lidarbot odometry_launch.py
+```
+
+and 
+```
+ros2 run real_lidarbot go_to_goal_node.py --ros-args -p coordinate_pairs:=2 \
+-p coordinates:='[0.5, 0.5, 0.0, 0.0]'
+```
 
 <p align='center'>
     <img src='images/0.5_diag.gif'>
@@ -112,9 +157,29 @@ Should the wheel(s) move in the direction opposite of what is expected, exchange
 
 ### (0.0, 0.0) &rarr; (0.8, 0.0) &rarr; (0.8, 0.8) &rarr; (0.0, 0.8) &rarr; (0.0, 0.0)
 
+Run on host machine:
+```
+ros2 run joy joy_node
+```
+
+Run on remote machine/lidarbot:
+
+```
+ros2 launch real_lidarbot odometry_launch.py
+```
+
+and 
+```
+ros2 run real_lidarbot go_to_goal_node.py --ros-args -p coordinate_pairs:=4 \
+-p coordinates:='[0.8, 0.0, 0.8, 0.8, 0.0, 0.8, 0.0, 0.0]'
+```
 
 <p align='center'>
     <img src='images/0.8_square.gif'>
 </p>
 
 ## Navigation (work in progress)
+
+| Gazebo | RViz |
+| :------: | :----: |
+| <img title='Lidarbot Gazebo' src='images/lidarbot_gazebo.jpg' width=400>| <img title=' Lidarbot RViz' src='images/lidarbot_rviz.png' width=400> |

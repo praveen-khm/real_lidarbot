@@ -1,0 +1,319 @@
+<?xml version="1.0" ?>
+<robot name="lidarbot" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Robot constants -->
+  <!-- Define the size of the robot's main chassis in meters-->
+  <xacro:property name="base_length" value="0.21"/>
+  <xacro:property name="base_width" value="0.11"/>
+  <xacro:property name="base_height" value="0.035"/>
+
+  <!-- Define the shape of the robot's two back wheels in metres-->
+  <xacro:property name="wheel_outer_radius" value="0.0325"/>
+  <xacro:property name="wheel_inner_radius" value="0.0225"/>
+  <xacro:property name="wheel_width" value="0.025"/>
+
+  <!-- x-axis points forward, y-axis points to left, z-axis points upwards -->
+  <!-- Define the gap between the wheel and chassis along y-axis in meters -->
+  <xacro:property name="wheel_ygap" value="0.003"/>
+
+  <!-- Distance between centre of wheel and robot base/chassis -->
+  <xacro:property name="wheel_zoff" value="0.0125"/>
+
+  <!-- Inertial xacro macros -->  
+  <xacro:macro name="box_inertia" params="m w h d">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="${m}"/>
+      <inertia ixx="${(m/12) * (h*h + d*d)}" ixy="0.0" ixz="0.0" iyy="${(m/12) * (w*w + d*d)}" iyz="0.0" izz="${(m/12) * (w*w + h*h)}"/>
+    </inertial>
+  </xacro:macro>
+
+  <xacro:macro name="thick_walled_cylinder_inertia" params="m r2 r1 h">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="${m}"/>
+      <inertia ixx="${(m/12) * (3*(r2*r2 + r1*r1) + h*h)}" ixy = "0" ixz = "0" iyy="${(m/12) * (3*(r2*r2 + r1*r1) + h*h)}" iyz = "0" izz="${(m/2) * (r2*r2 + r1*r1)}"/>
+    </inertial>
+  </xacro:macro>
+
+  <xacro:macro name="sphere_inertia" params="m r">
+    <inertial>
+      <mass value="${m}"/>
+      <inertia ixx="${(2/5) * m * (r*r)}" ixy="0.0" ixz="0.0" iyy="${(2/5) * m * (r*r)}" iyz="0.0" izz="${(2/5) * m * (r*r)}"/>
+    </inertial>
+  </xacro:macro>
+
+  <!-- Robot Base Footprint -->
+  <!-- Defines the centre of the main robot chassis projected on the ground -->
+  <link name="base_footprint"/>
+
+  <!-- The base footprint of the robot is located underneath the chassis/robot base  -->
+  <joint name="base_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 ${(wheel_outer_radius+wheel_zoff)}" rpy="0 0 0"/>
+  </joint>
+  
+  <!-- Robot Base -->
+  <link name="base_link">
+      <visual>
+        <origin xyz="0 0 -0.0125" rpy="0 0 0"/>
+          <geometry>
+              <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/robot_base_link.dae" />
+          </geometry>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="${base_length} ${base_width} ${base_height}"/>
+        </geometry>
+      </collision>
+
+    <!-- Caster mount -->
+      <visual name="caster_mount_visual">
+          <origin xyz="0.086 0 -0.0475" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/caster_mount.dae" />
+        </geometry>
+      </visual>
+      <collision name="caster_mount_collision">
+        <origin xyz="0.086 0 -0.005" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="0.023" length="0.0125"/>
+        </geometry>
+      </collision>
+
+     <!-- Rpi stand -->
+     <visual name="rpi_4_stand_visual">
+      <origin xyz="-0.06 0.015 0.031" rpy="3.1414 0 -3.1414"/>
+        <geometry>
+            <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/rpi_stand.dae" />
+        </geometry>
+    </visual>
+    <collision name="rpi_4_stand_collision">
+      <origin xyz="-0.06 0 0.017" rpy="0 0 1.5707"/>
+      <geometry>
+        <box size="0.098 0.065 0.034"/>
+      </geometry>
+    </collision>
+
+    <!-- Raspberry Pi -->
+    <visual name="rpi_4_visual">
+      <origin xyz="-0.059 0.00245 0.033" rpy="0 0 1.5707"/>
+      <geometry>
+        <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/rpi_4.dae"/>
+      </geometry>
+    </visual>
+    <collision name="rpi_4_collision">
+      <origin xyz="-0.058 0.005 0.041" rpy="0 0 1.5707"/>
+      <geometry>
+        <box size="0.09 0.06 0.02"/>
+      </geometry>
+    </collision>
+
+    <!-- Power bank stand -->
+    <visual name="power_bank_stand_visual">
+      <origin xyz="0.033 0.015 0.031" rpy="3.1414 0 3.1414"/>
+      <geometry>
+        <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/power_bank_stand.dae"/>
+      </geometry>
+    </visual>
+    <collision name="power_bank_stand_collision">
+      <origin xyz="0.033 0 0.0085" rpy="0 0 1.5707"/>
+      <geometry>
+        <box size="0.098 0.065 0.015"/>
+      </geometry>
+    </collision>
+
+    <!-- Power bank -->
+    <visual name="power_bank_visual">
+      <origin xyz="0.0635 0.04775 0.015" rpy="0 0 1.5707"/>
+      <geometry>
+        <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/power_bank.dae"/>
+      </geometry>
+    </visual>
+    <collision name="power_bank_collision">
+      <origin xyz="0.033 0 0.025" rpy="0 0 1.5707"/>
+      <geometry>
+        <box size="0.096 0.062 0.02"/>
+      </geometry>
+    </collision>
+    
+    <!-- Rplidar stand -->
+    <visual name="rplidar_stand_visual">
+      <origin xyz="0.033 0.015 0.017" rpy="0 0 -6.2828"/>
+      <geometry>
+        <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/rplidar_stand.dae"/>
+      </geometry>
+    </visual>
+    <collision name="rplidar_stand_collision">
+      <origin xyz="0.033 0 0.04" rpy="0 0 1.5707"/>
+      <geometry>
+        <box size="0.098 0.065 0.015"/>
+      </geometry>
+    </collision>
+
+    <!-- Rplidar base -->
+    <visual name="rplidar_base_visual">
+      <origin xyz="0.03485 0.0087 0.037" rpy="0 0 -1.5707"/>
+        <geometry>
+          <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/rplidar_base.dae"/>
+        </geometry>
+      </visual>
+    <collision name="rplidar_base_collision">
+      <origin xyz="0.033 0 0.056" rpy="0 0 -1.5707"/>
+      <geometry>
+        <box size="0.12 0.072 0.035"/>
+      </geometry>
+    </collision>
+
+    <!-- Depth camera mount -->
+    <visual name="camera_mount_visual">
+      <origin xyz="0.089 0 0.016" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="0.007" length="0.03"/>
+        </geometry>
+    </visual>
+    <collision name="camera_mount_collision">
+      <origin xyz="0.089 0 0.016" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.008" length="0.031"/>
+      </geometry>
+    </collision>
+
+      <xacro:box_inertia m="0.863" w="${base_width}" d="${base_length}" h="${base_height}"/>
+  </link>
+
+  <!-- Drive Wheels -->
+  <link name="left_wheel">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/left_wheel.dae" />
+        </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.0155" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_outer_radius+0.01}" length="${wheel_width}"/>
+      </geometry>
+    </collision>
+
+    <xacro:thick_walled_cylinder_inertia m="0.031" r2="${wheel_outer_radius}" r1="${wheel_inner_radius}" h="${wheel_width}"/>
+  </link>
+
+  <joint name="left_wheel_hinge" type="revolute">
+    <parent link="base_link"/>
+    <child link="left_wheel"/>
+    <origin xyz="-0.028 0.055 -${wheel_zoff}" rpy="1.5707 0 3.1414"/>
+    <limit upper="3.1415" lower="-3.1415" effort="30" velocity="5.0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <link name="right_wheel">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/right_wheel.dae"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.0065" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${wheel_outer_radius+0.01}" length="${wheel_width}"/>
+      </geometry>
+    </collision>
+
+    <xacro:thick_walled_cylinder_inertia m="0.031" r2="${wheel_outer_radius}" r1="${wheel_inner_radius}" h="${wheel_width}"/>
+  </link>
+
+  <joint name="right_wheel_hinge" type="revolute">
+    <parent link="base_link"/>
+    <child link="right_wheel"/>
+    <origin xyz="-0.028 -0.065 -${wheel_zoff}" rpy="1.5707 0 -3.1414"/>
+    <limit upper="3.1415" lower="-3.1415" effort="30" velocity="5.0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <!-- Caster wheel -->
+  <link name="caster_wheel">
+    <visual>
+      <geometry>
+        <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/caster_wheel.dae"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.001" rpy="0 0 1.5707"/>
+      <geometry>
+        <sphere radius="0.015"/>
+      </geometry>
+    </collision>
+
+    <xacro:sphere_inertia m="0.033" r="0.025"/>
+  </link>
+
+  <joint name="caster_wheel_to_base_link" type="fixed">
+    <parent link="base_link"/>
+    <child link="caster_wheel"/>
+    <origin xyz="0.0925 0 -0.031" rpy="0 0 1.5707"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <!-- Rplidar top -->
+  <link name="lidar_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/rplidar_top.dae"/>
+      </geometry>
+    </visual> 
+    <collision>
+      <origin xyz="0 -0.0009 0.011" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.037" length="0.021"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="lidar_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+    <origin xyz="0.0335 0.0095 0.069" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <!-- Imu sensor  -->
+  <link name="imu_link">
+    <visual name="imu_visual">
+      <geometry>
+        <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/MPU6050.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="imu_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin xyz="-0.06 0 0.0175" rpy="0 0 3.1414"/> 
+  </joint>
+
+  <!-- Depth camera -->
+  <link name="camera_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/d415.dae"/>
+      </geometry>
+    </visual> 
+    <collision>
+      <origin xyz="0 0 -0.01" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.1 0.025 0.022"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+    <origin xyz="0.1 0 0.0425" rpy="1.5707 0 1.5707"/>
+  </joint>
+
+</robot>
