@@ -1,4 +1,4 @@
- # Launch lidarbot URDF file using Rviz
+# Launch lidarbot URDF file using Rviz
 # File adapted from https://automaticaddison.com
 
 import os

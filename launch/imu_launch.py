@@ -9,4 +9,3 @@ def generate_launch_description():
                 name='imu_node',
                 )
             ])
-            

@@ -9,12 +9,12 @@ def generate_launch_description():
     serial_port_arg = DeclareLaunchArgument(
         name='serial_port',
         default_value='/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.3:1.0-port0',
-        description=''
+        description='Lidar serial port'
     )
     frame_id_arg = DeclareLaunchArgument(
         name='frame_id',
         default_value='lidar_link',
-        description=''
+        description='Lidar transform frame'
     )
     angle_compensate_arg = DeclareLaunchArgument(
         name='angle_compensate',
@@ -24,7 +24,7 @@ def generate_launch_description():
     scan_mode_arg = DeclareLaunchArgument(
         name='scan_mode',
         default_value='Standard',
-        description=''
+        description='Lidar scan mode'
     )
 
     return LaunchDescription([
@@ -45,6 +45,3 @@ def generate_launch_description():
             }]
         )
     ])
-
-# TO-DO:
-# Fill out description fields 
