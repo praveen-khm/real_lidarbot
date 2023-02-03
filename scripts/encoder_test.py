@@ -34,6 +34,7 @@ def signal_handler(sig, frame):
     GPIO.cleanup()
     sys.exit(0)
 
+
 if __name__ == '__main__':
     # Set mode for GPIO pins
     GPIO.setmode(GPIO.BCM)

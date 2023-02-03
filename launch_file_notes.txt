@@ -1,0 +1,8 @@
+Odometry launch file
+Also need to run the imu node
+Add the rviz_click_to_2d_node.py script to it. 
+Should we include rviz as well or a flag to check if it's running or not?
+
+
+Note:
+Make necessary adjustments when we've restructured the repo

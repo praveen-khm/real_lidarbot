@@ -201,7 +201,7 @@
     <xacro:thick_walled_cylinder_inertia m="0.031" r2="${wheel_outer_radius}" r1="${wheel_inner_radius}" h="${wheel_width}"/>
   </link>
 
-  <joint name="left_wheel_hinge" type="revolute">
+  <joint name="left_wheel_joint" type="revolute">
     <parent link="base_link"/>
     <child link="left_wheel"/>
     <origin xyz="-0.028 0.055 -${wheel_zoff}" rpy="1.5707 0 3.1414"/>
@@ -226,7 +226,7 @@
     <xacro:thick_walled_cylinder_inertia m="0.031" r2="${wheel_outer_radius}" r1="${wheel_inner_radius}" h="${wheel_width}"/>
   </link>
 
-  <joint name="right_wheel_hinge" type="revolute">
+  <joint name="right_wheel_joint" type="revolute">
     <parent link="base_link"/>
     <child link="right_wheel"/>
     <origin xyz="-0.028 -0.065 -${wheel_zoff}" rpy="1.5707 0 -3.1414"/>
@@ -251,7 +251,7 @@
     <xacro:sphere_inertia m="0.033" r="0.025"/>
   </link>
 
-  <joint name="caster_wheel_to_base_link" type="fixed">
+  <joint name="caster_wheel_joint" type="fixed">
     <parent link="base_link"/>
     <child link="caster_wheel"/>
     <origin xyz="0.0925 0 -0.031" rpy="0 0 1.5707"/>

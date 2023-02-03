@@ -5,9 +5,11 @@
     module, to the 'imu/data' topic. 
 '''
 
+from real_lidarbot.mpu6050 import mpu6050
+
 import rclpy
 from rclpy.node import Node
-from real_lidarbot.mpu6050 import mpu6050
+
 from sensor_msgs.msg import Imu
 
 # IMU class 
@@ -35,7 +37,6 @@ class ImuNode(Node):
             Acceleromter data unit - m/s^2
             Gyroscope data unit    - rad/sec
         '''
-
         # Initialize Imu message
         msg = Imu()
 
@@ -67,6 +68,7 @@ class ImuNode(Node):
                                 " z: %.4f" % (msg.angular_velocity.z)
                                 )
 
+
 if __name__ == '__main__':
     try:
         # Initialize ROS python client
@@ -74,8 +76,8 @@ if __name__ == '__main__':
 
         # Create imu_node node
         imu_node = ImuNode()
-
-        # Wait for incoming 'messages/callbacks'
+        
+        # Spins node for callback function 
         rclpy.spin(imu_node)
 
     # On Ctrl+C executed in the terminal

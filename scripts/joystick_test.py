@@ -8,10 +8,13 @@
     and /left_motor_dir respectively.
 '''
 
-from real_lidarbot.motor import Motor
 import math
+
+from real_lidarbot.motor import Motor
+
 import rclpy
 from rclpy.node import Node
+
 from std_msgs.msg import String
 from sensor_msgs.msg import Joy
 
@@ -130,6 +133,7 @@ class JoystickPad(Node):
         # Run motors with specified direction and speeds
         self.motor.MotorRun(0, left_motor_direction.data, abs(left_motor_speed))
         self.motor.MotorRun(1, right_motor_direction.data, abs(right_motor_speed))
+
 
 # Main function
 def main():

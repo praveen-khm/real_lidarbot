@@ -4,15 +4,20 @@
     The go to goal node accepts coordinates and the proportionate number of coordinate pairs parameters to inform the robot
     on the positions it should move to.  
     
-    The node subscribes to /odom_data and /joy topics, to calculate motor speeds and stop the motors, respectively. 
+    The node subscribes to /odom and /joy topics, to calculate motor speeds and stop the motors, respectively. 
     It also publishes the right and left wheel directions on topics /right_motor_dir and /left_motor_dir correspondingly.
 '''
 
 from time import sleep, process_time
-from math import atan2, sqrt, pi, cos, sin 
+from math import atan2, sqrt, pi, cos, sin
+
 from real_lidarbot.motor import Motor
+from real_lidarbot.utils import euler_from_quaternion
+
 import rclpy
 from rclpy.node import Node
+
+from geometry_msgs.msg import Quaternion
 from sensor_msgs.msg import Joy
 from std_msgs.msg import String
 from nav_msgs.msg import Odometry
@@ -48,7 +53,7 @@ class GoToGoal(Node):
         # Create a subscription to /odom_data topic
         self.odom_sub = self.create_subscription(
                 Odometry,
-                'odom_data',
+                'odom',
                 self.odom_callback,
                 5 
             )
@@ -92,15 +97,21 @@ class GoToGoal(Node):
             This function calculates the linear and angular speeds used to set the robot's motor speeds
             to move the robot from its current set of coordinates to the desired goal coordinates.
         '''
-        global start_time        
+        global start_time
+        quat = Quaternion()        
 
         x_goal = self.coordinates.value[self.counter*2]     # Goal x coordinate
         y_goal = self.coordinates.value[(self.counter*2)+1] # Goal y coordinate
         
         x_curr = msg.pose.pose.position.x                   # Current x coordinate
         y_curr = msg.pose.pose.position.y                   # Current y coordinate
-        theta_curr = msg.pose.pose.orientation.z            # Current theta angle in radians
 
+        quat = msg.pose.pose.orientation                    # Current orientation in quaternion form
+
+        # Obtain euler angles (in radians) from quaternion and assign as current theta angle
+        euler_angles = euler_from_quaternion(quat.x, quat.y, quat.z, quat.w)
+        theta_curr = euler_angles[2]
+        
         # Euclidean distance between goal and current x,y coordinates
         euclid_dist = abs(sqrt(((x_goal - x_curr) ** 2) + ((y_goal - y_curr) ** 2)))
         K_p_linear = 1.4 # Proportial gain for linear speed
@@ -201,6 +212,7 @@ class GoToGoal(Node):
         # Run motors with specified direction and speeds
         self.motor.MotorRun(0, left_motor_direction.data, abs(left_motor_speed))
         self.motor.MotorRun(1, right_motor_direction.data, abs(right_motor_speed))
+
 
 # Main function
 def main():

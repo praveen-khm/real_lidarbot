@@ -8,9 +8,12 @@
 import signal
 import sys
 import RPi.GPIO as GPIO
+
 from real_lidarbot.msg import Tick
+
 import rclpy
 from rclpy.node import Node
+
 from std_msgs.msg import String
 
 # GPIO Pins
@@ -67,7 +70,7 @@ class Encoder(Node):
                String,
                'right_motor_dir',
                self.right_dir_callback,
-               1 
+               10 
             )
 
        # Create subscription to /left_motor_dir topic
@@ -75,11 +78,11 @@ class Encoder(Node):
                String,
                'left_motor_dir',
                self.left_dir_callback,
-               1
+               10
             )
 
        # Create a publisher for the /ticks topic, which holds both left and right ticks, of type Tick
-       self.ticks_pub = self.create_publisher(Tick, 'ticks', 1)
+       self.ticks_pub = self.create_publisher(Tick, 'ticks', 10)
        timer_period = 0.05 # seconds
        self.timer = self.create_timer(timer_period, self.timer_callback)
 
@@ -125,6 +128,7 @@ def signal_handler(sig, frame):
     
     # Exit python interpreter
     sys.exit(0)
+
 
 if __name__ == '__main__':
     # Initialize signal module

@@ -13,7 +13,7 @@ def generate_launch_description():
     )
     frame_id_arg = DeclareLaunchArgument(
         name='frame_id',
-        default_value='laser_frame',
+        default_value='lidar_link',
         description=''
     )
     angle_compensate_arg = DeclareLaunchArgument(

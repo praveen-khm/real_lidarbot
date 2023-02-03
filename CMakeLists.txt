@@ -57,11 +57,12 @@ install(PROGRAMS
  scripts/joystick_test.py
  scripts/odometry_node.py
  scripts/go_to_goal_node.py
+ scripts/rviz_click_to_2d_node.py
  DESTINATION lib/${PROJECT_NAME}
 )
 
 install(
-  DIRECTORY config launch maps meshes models params rviz scripts src tests worlds
+  DIRECTORY config launch maps models params rviz scripts src tests worlds
   DESTINATION share/${PROJECT_NAME}
 )
 
