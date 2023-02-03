@@ -480,8 +480,8 @@
     <!-- Wheel Odometry -->
     <plugin name='lidarbot_diff_drive' filename='libgazebo_ros_diff_drive.so'>
       <update_rate>25</update_rate>
-      <left_joint>left_wheel_hinge</left_joint>
-      <right_joint>right_wheel_hinge</right_joint>
+      <left_joint>left_wheel_joint</left_joint>
+      <right_joint>right_wheel_joint</right_joint>
       <wheel_separation>0.134</wheel_separation>
       <wheel_diameter>0.067</wheel_diameter>
       <max_wheel_torque>15</max_wheel_torque>
