@@ -8,7 +8,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
     serial_port_arg = DeclareLaunchArgument(
         name='serial_port',
-        default_value='/dev/serial/by-path/pci-0000:03:00.0-usb-0:1:1.0-port0',
+        default_value='/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.3:1.0-port0',
         description=''
     )
     frame_id_arg = DeclareLaunchArgument(
