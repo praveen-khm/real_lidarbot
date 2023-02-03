@@ -206,7 +206,8 @@
     <child link="left_wheel"/>
     <origin xyz="-0.028 0.055 -${wheel_zoff}" rpy="1.5707 0 3.1414"/>
     <limit upper="3.1415" lower="-3.1415" effort="30" velocity="5.0"/>
-    <axis xyz="0 1 0"/>
+    <axis xyz="0 0 1"/>
+    <!-- <axis xyz="0 1 0"/> -->
   </joint>
 
   <link name="right_wheel">
