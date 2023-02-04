@@ -1,6 +1,24 @@
 <?xml version="1.0" ?>
-<robot name="lidarbot" xmlns:xacro="http://ros.org/wiki/xacro">
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
   <!-- Robot constants -->
   <!-- Define the size of the robot's main chassis in meters-->
   <xacro:property name="base_length" value="0.21"/>
@@ -201,10 +219,11 @@
     <xacro:thick_walled_cylinder_inertia m="0.031" r2="${wheel_outer_radius}" r1="${wheel_inner_radius}" h="${wheel_width}"/>
   </link>
 
-  <joint name="left_wheel_joint" type="continuous">
+  <joint name="left_wheel_joint" type="revolute">
     <parent link="base_link"/>
     <child link="left_wheel"/>
     <origin xyz="-0.028 0.055 -${wheel_zoff}" rpy="1.5707 0 3.1414"/>
+    <limit upper="3.1415" lower="-3.1415" effort="30" velocity="5.0"/>
     <axis xyz="0 0 1"/>
     <!-- <axis xyz="0 1 0"/> -->
   </joint>
@@ -226,10 +245,11 @@
     <xacro:thick_walled_cylinder_inertia m="0.031" r2="${wheel_outer_radius}" r1="${wheel_inner_radius}" h="${wheel_width}"/>
   </link>
 
-  <joint name="right_wheel_joint" type="continuous">
+  <joint name="right_wheel_joint" type="revolute">
     <parent link="base_link"/>
     <child link="right_wheel"/>
     <origin xyz="-0.028 -0.065 -${wheel_zoff}" rpy="1.5707 0 -3.1414"/>
+    <limit upper="3.1415" lower="-3.1415" effort="30" velocity="5.0"/>
     <axis xyz="0 0 1"/>
     <!-- <axis xyz="0 1 0"/> -->
   </joint>
