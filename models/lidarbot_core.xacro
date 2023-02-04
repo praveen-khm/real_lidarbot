@@ -1,24 +1,8 @@
 <?xml version="1.0" ?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
+  <xacro:include filename="inertial_macros.xacro"/>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
   <!-- Robot constants -->
   <!-- Define the size of the robot's main chassis in meters-->
   <xacro:property name="base_length" value="0.21"/>
@@ -37,29 +21,6 @@
   <!-- Distance between centre of wheel and robot base/chassis -->
   <xacro:property name="wheel_zoff" value="0.0125"/>
 
-  <!-- Inertial xacro macros -->  
-  <xacro:macro name="box_inertia" params="m w h d">
-    <inertial>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <mass value="${m}"/>
-      <inertia ixx="${(m/12) * (h*h + d*d)}" ixy="0.0" ixz="0.0" iyy="${(m/12) * (w*w + d*d)}" iyz="0.0" izz="${(m/12) * (w*w + h*h)}"/>
-    </inertial>
-  </xacro:macro>
-
-  <xacro:macro name="thick_walled_cylinder_inertia" params="m r2 r1 h">
-    <inertial>
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <mass value="${m}"/>
-      <inertia ixx="${(m/12) * (3*(r2*r2 + r1*r1) + h*h)}" ixy = "0" ixz = "0" iyy="${(m/12) * (3*(r2*r2 + r1*r1) + h*h)}" iyz = "0" izz="${(m/2) * (r2*r2 + r1*r1)}"/>
-    </inertial>
-  </xacro:macro>
-
-  <xacro:macro name="sphere_inertia" params="m r">
-    <inertial>
-      <mass value="${m}"/>
-      <inertia ixx="${(2/5) * m * (r*r)}" ixy="0.0" ixz="0.0" iyy="${(2/5) * m * (r*r)}" iyz="0.0" izz="${(2/5) * m * (r*r)}"/>
-    </inertial>
-  </xacro:macro>
 
   <!-- Robot Base Footprint -->
   <!-- Defines the centre of the main robot chassis projected on the ground -->
@@ -198,10 +159,13 @@
       </geometry>
     </collision>
 
-      <xacro:box_inertia m="0.863" w="${base_width}" d="${base_length}" h="${base_height}"/>
+      <xacro:box_inertia mass="0.863" width="${base_width}" depth="${base_length}" height="${base_height}">
+        <origin xyz="0 0 -0.0125" rpy="0 0 0"/>
+      </xacro>
+
   </link>
 
-  <!-- Drive Wheels -->
+  <!-- Left Wheel Link -->
   <link name="left_wheel">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -216,18 +180,19 @@
       </geometry>
     </collision>
 
-    <xacro:thick_walled_cylinder_inertia m="0.031" r2="${wheel_outer_radius}" r1="${wheel_inner_radius}" h="${wheel_width}"/>
+    <xacro:thick_walled_cylinder_inertia m="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" h="${wheel_width}">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </xacro>
   </link>
 
-  <joint name="left_wheel_joint" type="revolute">
+  <joint name="left_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="left_wheel"/>
     <origin xyz="-0.028 0.055 -${wheel_zoff}" rpy="1.5707 0 3.1414"/>
-    <limit upper="3.1415" lower="-3.1415" effort="30" velocity="5.0"/>
     <axis xyz="0 0 1"/>
-    <!-- <axis xyz="0 1 0"/> -->
   </joint>
 
+  <!-- Right Wheel Link -->
   <link name="right_wheel">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -242,16 +207,16 @@
       </geometry>
     </collision>
 
-    <xacro:thick_walled_cylinder_inertia m="0.031" r2="${wheel_outer_radius}" r1="${wheel_inner_radius}" h="${wheel_width}"/>
+    <xacro:thick_walled_cylinder_inertia m="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" h="${wheel_width}">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </xacro>
   </link>
 
-  <joint name="right_wheel_joint" type="revolute">
+  <joint name="right_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="right_wheel"/>
     <origin xyz="-0.028 -0.065 -${wheel_zoff}" rpy="1.5707 0 -3.1414"/>
-    <limit upper="3.1415" lower="-3.1415" effort="30" velocity="5.0"/>
     <axis xyz="0 0 1"/>
-    <!-- <axis xyz="0 1 0"/> -->
   </joint>
 
   <!-- Caster wheel -->
@@ -268,7 +233,9 @@
       </geometry>
     </collision>
 
-    <xacro:sphere_inertia m="0.033" r="0.025"/>
+    <xacro:sphere_inertia mass="0.033" radius="0.025"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </xacro>
   </link>
 
   <joint name="caster_wheel_joint" type="fixed">
@@ -276,64 +243,6 @@
     <child link="caster_wheel"/>
     <origin xyz="0.0925 0 -0.031" rpy="0 0 1.5707"/>
     <axis xyz="0 0 1"/>
-  </joint>
-
-  <!-- Rplidar top -->
-  <link name="lidar_link">
-    <visual>
-      <geometry>
-        <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/rplidar_top.dae"/>
-      </geometry>
-    </visual> 
-    <collision>
-      <origin xyz="0 -0.0009 0.011" rpy="0 0 0"/>
-      <geometry>
-        <cylinder radius="0.037" length="0.021"/>
-      </geometry>
-    </collision>
-  </link>
-
-  <joint name="lidar_joint" type="fixed">
-    <parent link="base_link"/>
-    <child link="lidar_link"/>
-    <origin xyz="0.0335 0.0095 0.069" rpy="0 0 0"/>
-    <axis xyz="0 0 1"/>
-  </joint>
-
-  <!-- Imu sensor  -->
-  <link name="imu_link">
-    <visual name="imu_visual">
-      <geometry>
-        <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/MPU6050.dae"/>
-      </geometry>
-    </visual>
-  </link>
-
-  <joint name="imu_joint" type="fixed">
-    <parent link="base_link"/>
-    <child link="imu_link"/>
-    <origin xyz="-0.06 0 0.0175" rpy="0 0 3.1414"/> 
-  </joint>
-
-  <!-- Depth camera -->
-  <link name="camera_link">
-    <visual>
-      <geometry>
-        <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/d415.dae"/>
-      </geometry>
-    </visual> 
-    <collision>
-      <origin xyz="0 0 -0.01" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.1 0.025 0.022"/>
-      </geometry>
-    </collision>
-  </link>
-
-  <joint name="camera_joint" type="fixed">
-    <parent link="base_link"/>
-    <child link="camera_link"/>
-    <origin xyz="0.1 0 0.0425" rpy="1.5707 0 1.5707"/>
   </joint>
 
 </robot>

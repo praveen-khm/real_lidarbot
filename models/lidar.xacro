@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <link name="lidar_link">
+        <visual>
+            <geometry>
+            <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/rplidar_top.dae"/>
+            </geometry>
+        </visual> 
+        <collision>
+            <origin xyz="0 -0.0009 0.011" rpy="0 0 0"/>
+            <geometry>
+            <cylinder radius="0.037" length="0.021"/>
+            </geometry>
+        </collision>
+        </link>
+
+        <joint name="lidar_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="lidar_link"/>
+        <origin xyz="0.0335 0.0095 0.069" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        </joint>
+
+</robot>

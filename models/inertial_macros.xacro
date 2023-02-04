@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <!-- Specify some standard inertial calculations https://en.wikipedia.org/wiki/List_of_moments_of_inertia -->
+    <xacro:macro name="box_inertia" params="mass width height depth *origin">
+        <inertial>
+            <xacro:insert_block name="origin"/>
+            <mass value="${mass}"/>
+            <inertia ixx="${(mass/12) * (height*height + depth*depth)}" ixy="0.0" ixz="0.0" 
+                    iyy="${(mass/12) * (width*width + depth*depth)}" iyz="0.0" 
+                    izz="${(mass/12) * (width*width + height*height)}"/>
+        </inertial>
+    </xacro:macro>
+
+    <xacro:macro name="thick_walled_cylinder_inertia" params="mass outer_radius inner_radius height *origin">
+        <inertial>
+            <xacro:insert_block name="origin"/>
+            <mass value="${mass}"/>
+            <inertia ixx="${(mass/12) * (3*(outer_radius*outer_radius + inner_radius*inner_radius) + height*height)}" ixy = "0" ixz = "0" 
+                    iyy="${(mass/12) * (3*(outer_radius*outer_radius + inner_radius*inner_radius) + height*height)}" iyz = "0" 
+                    izz="${(mass/2) * (outer_radius*outer_radius + inner_radius*inner_radius)}"/>
+        </inertial>
+    </xacro:macro>
+
+    <xacro:macro name="sphere_inertia" params="mass radius *origin">
+        <inertial>
+            <xacro:insert_block name="origin"/>
+            <mass value="${mass}"/>
+            <inertia ixx="${(2/5) * mass * (radius*radius)}" ixy="0.0" ixz="0.0" 
+                    iyy="${(2/5) * mass * (radius*radius)}" iyz="0.0" 
+                    izz="${(2/5) * mass * (radius*radius)}"/>
+        </inertial>
+    </xacro:macro>
+    
+</robot>

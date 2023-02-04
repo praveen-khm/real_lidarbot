@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Depth camera -->
+  <link name="camera_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/d415.dae"/>
+      </geometry>
+    </visual> 
+    <collision>
+      <origin xyz="0 0 -0.01" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.1 0.025 0.022"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+    <origin xyz="0.1 0 0.0425" rpy="1.5707 0 1.5707"/>
+  </joint>
+
+  <!-- Need to add more details for the camera  -->
+  
+</robot>
