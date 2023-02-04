@@ -9,6 +9,8 @@ from launch.substitutions import Command, LaunchConfiguration
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
+import xacro
+
 def generate_launch_description():
     # Set package path
     pkg_share = FindPackageShare(package='real_lidarbot').find('real_lidarbot')

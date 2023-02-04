@@ -21,7 +21,6 @@
   <!-- Distance between centre of wheel and robot base/chassis -->
   <xacro:property name="wheel_zoff" value="0.0125"/>
 
-
   <!-- Robot Base Footprint -->
   <!-- Defines the centre of the main robot chassis projected on the ground -->
   <link name="base_footprint"/>
@@ -162,7 +161,6 @@
       <xacro:box_inertia mass="0.863" width="${base_width}" depth="${base_length}" height="${base_height}">
         <origin xyz="0 0 -0.0125" rpy="0 0 0"/>
       </xacro>
-
   </link>
 
   <!-- Left Wheel Link -->
