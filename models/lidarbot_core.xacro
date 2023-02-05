@@ -158,9 +158,9 @@
       </geometry>
     </collision>
 
-      <!-- <xacro:box_inertia mass="0.863" width="${base_width}" depth="${base_length}" height="${base_height}">
+      <xacro:box_inertia mass="0.863" width="${base_width}" depth="${base_length}" height="${base_height}">
         <origin xyz="0 0 -0.0125" rpy="0 0 0"/>
-      </xacro> -->
+      </xacro>
   </link>
 
   <!-- Left Wheel Link -->
