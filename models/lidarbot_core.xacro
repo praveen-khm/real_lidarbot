@@ -12,7 +12,7 @@
   <!-- Define the shape of the robot's two back wheels in metres-->
   <xacro:property name="wheel_outer_radius" value="0.0325"/>
   <xacro:property name="wheel_inner_radius" value="0.0225"/>
-  <xacro:property name="wheel_width" value="0.025"/>
+  <xacro:property name="wheel_height" value="0.025"/>
 
   <!-- x-axis points forward, y-axis points to left, z-axis points upwards -->
   <!-- Define the gap between the wheel and chassis along y-axis in meters -->
@@ -174,11 +174,11 @@
     <collision>
       <origin xyz="0 0 0.0155" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius="${wheel_outer_radius+0.01}" length="${wheel_width}"/>
+        <cylinder radius="${wheel_outer_radius+0.01}" length="${wheel_height}"/>
       </geometry>
     </collision>
 
-    <xacro:thick_walled_cylinder_inertia m="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" h="${wheel_width}">
+    <xacro:thick_walled_cylinder_inertia mass="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
       <origin xyz="0 0 0" rpy="0 0 0"/>
     </xacro>
   </link>
@@ -201,11 +201,11 @@
     <collision>
       <origin xyz="0 0 -0.0065" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius="${wheel_outer_radius+0.01}" length="${wheel_width}"/>
+        <cylinder radius="${wheel_outer_radius+0.01}" length="${wheel_height}"/>
       </geometry>
     </collision>
 
-    <xacro:thick_walled_cylinder_inertia m="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" h="${wheel_width}">
+    <xacro:thick_walled_cylinder_inertia mass="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
       <origin xyz="0 0 0" rpy="0 0 0"/>
     </xacro>
   </link>
