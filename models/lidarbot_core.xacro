@@ -3,7 +3,7 @@
 
   <xacro:include filename="inertial_macros.xacro"/>
 
-  <!-- Robot constants -->
+  <!-- Robot constants (measurements in metres) -->
   <!-- Define the size of the robot's main chassis in meters-->
   <xacro:property name="base_length" value="0.21"/>
   <xacro:property name="base_width" value="0.11"/>
@@ -158,9 +158,9 @@
       </geometry>
     </collision>
 
-      <!-- <xacro:box_inertia mass="0.863" width="${base_width}" depth="${base_length}" height="${base_height}">
+      <xacro:box_inertia mass="0.863" width="${base_width}" depth="${base_length}" height="${base_height}">
         <origin xyz="0 0 -0.0125" rpy="0 0 0"/>
-      </xacro> -->
+      </xacro:box_inertia>
   </link>
 
   <!-- Left Wheel Link -->
@@ -180,7 +180,7 @@
 
     <xacro:thick_walled_cylinder_inertia mass="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
       <origin xyz="0 0 0" rpy="0 0 0"/>
-    </xacro>
+    </xacro:thick_walled_cylinder_inertia>
   </link>
 
   <joint name="left_wheel_joint" type="continuous">
@@ -207,7 +207,7 @@
 
     <xacro:thick_walled_cylinder_inertia mass="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
       <origin xyz="0 0 0" rpy="0 0 0"/>
-    </xacro>
+    </xacro:thick_walled_cylinder_inertia>
   </link>
 
   <joint name="right_wheel_joint" type="continuous">
@@ -231,9 +231,9 @@
       </geometry>
     </collision>
 
-    <!-- <xacro:sphere_inertia mass="0.033" radius="0.025"/>
+    <xacro:sphere_inertia mass="0.033" radius="0.025"/>
       <origin xyz="0 0 0" rpy="0 0 0"/>
-    </xacro> -->
+  </xacro:sphere_inertia>
   </link>
 
   <joint name="caster_wheel_joint" type="fixed">
