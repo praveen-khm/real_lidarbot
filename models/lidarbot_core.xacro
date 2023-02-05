@@ -158,9 +158,9 @@
       </geometry>
     </collision>
 
-      <xacro:box_inertia mass="0.863" width="${base_width}" depth="${base_length}" height="${base_height}">
+      <!-- <xacro:box_inertia mass="0.863" width="${base_width}" depth="${base_length}" height="${base_height}">
         <origin xyz="0 0 -0.0125" rpy="0 0 0"/>
-      </xacro>
+      </xacro> -->
   </link>
 
   <!-- Left Wheel Link -->
@@ -178,9 +178,9 @@
       </geometry>
     </collision>
 
-    <!-- <xacro:thick_walled_cylinder_inertia mass="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
+    <xacro:thick_walled_cylinder_inertia mass="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
       <origin xyz="0 0 0" rpy="0 0 0"/>
-    </xacro> -->
+    </xacro>
   </link>
 
   <joint name="left_wheel_joint" type="continuous">
@@ -205,9 +205,9 @@
       </geometry>
     </collision>
 
-    <!-- <xacro:thick_walled_cylinder_inertia mass="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
+    <xacro:thick_walled_cylinder_inertia mass="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
       <origin xyz="0 0 0" rpy="0 0 0"/>
-    </xacro> -->
+    </xacro>
   </link>
 
   <joint name="right_wheel_joint" type="continuous">
