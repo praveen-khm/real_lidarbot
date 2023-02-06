@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-    <!-- Specify some standard inertial calculations https://en.wikipedia.org/wiki/List_of_moments_of_inertia -->
+    <!-- Some standard inertial calculations, obtained from: https://en.wikipedia.org/wiki/List_of_moments_of_inertia -->
     <xacro:macro name="box_inertia" params="mass width height depth *origin">
         <inertial>
             <xacro:insert_block name="origin"/>

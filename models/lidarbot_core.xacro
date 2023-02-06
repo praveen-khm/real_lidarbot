@@ -4,18 +4,17 @@
   <xacro:include filename="inertial_macros.xacro"/>
 
   <!-- Robot constants (measurements in metres) -->
-  <!-- Define the size of the robot's main chassis in meters-->
+  <!-- Robot's chassis measurements -->
   <xacro:property name="base_length" value="0.21"/>
   <xacro:property name="base_width" value="0.11"/>
   <xacro:property name="base_height" value="0.035"/>
 
-  <!-- Define the shape of the robot's two back wheels in metres-->
+  <!-- Robot's wheel measurements -->
   <xacro:property name="wheel_outer_radius" value="0.0325"/>
   <xacro:property name="wheel_inner_radius" value="0.0225"/>
   <xacro:property name="wheel_height" value="0.025"/>
 
-  <!-- x-axis points forward, y-axis points to left, z-axis points upwards -->
-  <!-- Define the gap between the wheel and chassis along y-axis in meters -->
+  <!-- Gap between the wheel and chassis along y-axis -->
   <xacro:property name="wheel_ygap" value="0.003"/>
 
   <!-- Distance between centre of wheel and robot base/chassis -->
@@ -61,13 +60,13 @@
 
      <!-- Rpi stand -->
      <visual name="rpi_4_stand_visual">
-      <origin xyz="-0.06 0.015 0.031" rpy="3.1414 0 -3.1414"/>
+      <origin xyz="-0.06 0.015 0.031" rpy="${pi} 0 ${-pi}"/>
         <geometry>
             <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/rpi_stand.dae" />
         </geometry>
     </visual>
     <collision name="rpi_4_stand_collision">
-      <origin xyz="-0.06 0 0.017" rpy="0 0 1.5707"/>
+      <origin xyz="-0.06 0 0.017" rpy="0 0 ${pi/2}"/>
       <geometry>
         <box size="0.098 0.065 0.034"/>
       </geometry>
@@ -75,13 +74,13 @@
 
     <!-- Raspberry Pi -->
     <visual name="rpi_4_visual">
-      <origin xyz="-0.059 0.00245 0.033" rpy="0 0 1.5707"/>
+      <origin xyz="-0.059 0.00245 0.033" rpy="0 0 ${pi/2}"/>
       <geometry>
         <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/rpi_4.dae"/>
       </geometry>
     </visual>
     <collision name="rpi_4_collision">
-      <origin xyz="-0.058 0.005 0.041" rpy="0 0 1.5707"/>
+      <origin xyz="-0.058 0.005 0.041" rpy="0 0 ${pi/2}"/>
       <geometry>
         <box size="0.09 0.06 0.02"/>
       </geometry>
@@ -89,13 +88,13 @@
 
     <!-- Power bank stand -->
     <visual name="power_bank_stand_visual">
-      <origin xyz="0.033 0.015 0.031" rpy="3.1414 0 3.1414"/>
+      <origin xyz="0.033 0.015 0.031" rpy="${pi} 0 ${pi}"/>
       <geometry>
         <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/power_bank_stand.dae"/>
       </geometry>
     </visual>
     <collision name="power_bank_stand_collision">
-      <origin xyz="0.033 0 0.0085" rpy="0 0 1.5707"/>
+      <origin xyz="0.033 0 0.0085" rpy="0 0 ${pi/2}"/>
       <geometry>
         <box size="0.098 0.065 0.015"/>
       </geometry>
@@ -103,13 +102,13 @@
 
     <!-- Power bank -->
     <visual name="power_bank_visual">
-      <origin xyz="0.0635 0.04775 0.015" rpy="0 0 1.5707"/>
+      <origin xyz="0.0635 0.04775 0.015" rpy="0 0 ${pi/2}"/>
       <geometry>
         <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/power_bank.dae"/>
       </geometry>
     </visual>
     <collision name="power_bank_collision">
-      <origin xyz="0.033 0 0.025" rpy="0 0 1.5707"/>
+      <origin xyz="0.033 0 0.025" rpy="0 0 ${pi/2}"/>
       <geometry>
         <box size="0.096 0.062 0.02"/>
       </geometry>
@@ -117,13 +116,13 @@
     
     <!-- Rplidar stand -->
     <visual name="rplidar_stand_visual">
-      <origin xyz="0.033 0.015 0.017" rpy="0 0 -6.2828"/>
+      <origin xyz="0.033 0.015 0.017" rpy="0 0 ${-2*pi}"/>
       <geometry>
         <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/rplidar_stand.dae"/>
       </geometry>
     </visual>
     <collision name="rplidar_stand_collision">
-      <origin xyz="0.033 0 0.04" rpy="0 0 1.5707"/>
+      <origin xyz="0.033 0 0.04" rpy="0 0 ${pi/2}"/>
       <geometry>
         <box size="0.098 0.065 0.015"/>
       </geometry>
@@ -131,13 +130,13 @@
 
     <!-- Rplidar base -->
     <visual name="rplidar_base_visual">
-      <origin xyz="0.03485 0.0087 0.037" rpy="0 0 -1.5707"/>
+      <origin xyz="0.03485 0.0087 0.037" rpy="0 0 ${-pi/2}"/>
         <geometry>
           <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/rplidar_base.dae"/>
         </geometry>
       </visual>
     <collision name="rplidar_base_collision">
-      <origin xyz="0.033 0 0.056" rpy="0 0 -1.5707"/>
+      <origin xyz="0.033 0 0.056" rpy="0 0 ${-pi/2}"/>
       <geometry>
         <box size="0.12 0.072 0.035"/>
       </geometry>
@@ -157,7 +156,7 @@
       </geometry>
     </collision>
 
-    <xacro:box_inertia mass="0.863" width="${base_width}" depth="${base_length}" height="${base_height}">
+    <xacro:box_inertia mass="0.864" width="${base_width}" depth="${base_length}" height="${base_height}">
       <origin xyz="0 0 -0.0125" rpy="0 0 0"/>
     </xacro:box_inertia>
   </link>
@@ -177,7 +176,7 @@
       </geometry>
     </collision>
 
-    <xacro:thick_walled_cylinder_inertia mass="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
+    <xacro:thick_walled_cylinder_inertia mass="0.03" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
       <origin xyz="0 0 0" rpy="0 0 0"/>
     </xacro:thick_walled_cylinder_inertia>
   </link>
@@ -185,7 +184,7 @@
   <joint name="left_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="left_wheel"/>
-    <origin xyz="-0.028 0.055 -${wheel_zoff}" rpy="1.5707 0 3.1414"/>
+    <origin xyz="-0.028 0.055 -${wheel_zoff}" rpy="${pi/2} 0 ${pi}"/>
     <axis xyz="0 0 1"/>
   </joint>
 
@@ -204,7 +203,7 @@
       </geometry>
     </collision>
 
-    <xacro:thick_walled_cylinder_inertia mass="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
+    <xacro:thick_walled_cylinder_inertia mass="0.03" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
       <origin xyz="0 0 0" rpy="0 0 0"/>
     </xacro:thick_walled_cylinder_inertia>
   </link>
@@ -212,7 +211,7 @@
   <joint name="right_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="right_wheel"/>
-    <origin xyz="-0.028 -0.065 -${wheel_zoff}" rpy="1.5707 0 -3.1414"/>
+    <origin xyz="-0.028 -0.065 -${wheel_zoff}" rpy="${pi/2} 0 ${-pi}"/>
     <axis xyz="0 0 1"/>
   </joint>
 
@@ -224,7 +223,7 @@
       </geometry>
     </visual>
     <collision>
-      <origin xyz="0 0 -0.001" rpy="0 0 1.5707"/>
+      <origin xyz="0 0 -0.001" rpy="0 0 ${pi/2}"/>
       <geometry>
         <sphere radius="0.015"/>
       </geometry>
@@ -238,7 +237,7 @@
   <joint name="caster_wheel_joint" type="fixed">
     <parent link="base_link"/>
     <child link="caster_wheel"/>
-    <origin xyz="0.0925 0 -0.031" rpy="0 0 1.5707"/>
+    <origin xyz="0.0925 0 -0.031" rpy="0 0 ${pi/2}"/>
     <axis xyz="0 0 1"/>
   </joint>
 

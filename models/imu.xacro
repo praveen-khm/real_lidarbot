@@ -13,7 +13,7 @@
   <joint name="imu_joint" type="fixed">
     <parent link="base_link"/>
     <child link="imu_link"/>
-    <origin xyz="-0.06 0 0.0175" rpy="0 0 3.1414"/> 
+    <origin xyz="-0.06 0 0.0175" rpy="0 0 ${pi}"/> 
   </joint>
 
 </robot>
