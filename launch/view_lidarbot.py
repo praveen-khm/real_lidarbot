@@ -10,6 +10,7 @@ from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
+    
     # Set package path
     pkg_share = FindPackageShare(package='real_lidarbot').find('real_lidarbot')
 
@@ -110,7 +111,3 @@ def generate_launch_description():
     ld.add_action(start_rviz_cmd)
     
     return ld
-
- # TO-DO:
- # Update file using Addison's tutorials and my two wheeled robot launch
-#  file that brings up rviz and gazebo 

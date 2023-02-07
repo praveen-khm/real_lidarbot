@@ -176,7 +176,7 @@
       </geometry>
     </collision>
 
-    <xacro:thick_walled_cylinder_inertia mass="0.03" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
+    <xacro:thick_walled_cylinder_inertia mass="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
       <origin xyz="0 0 0" rpy="0 0 0"/>
     </xacro:thick_walled_cylinder_inertia>
   </link>
@@ -203,7 +203,7 @@
       </geometry>
     </collision>
 
-    <xacro:thick_walled_cylinder_inertia mass="0.03" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
+    <xacro:thick_walled_cylinder_inertia mass="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
       <origin xyz="0 0 0" rpy="0 0 0"/>
     </xacro:thick_walled_cylinder_inertia>
   </link>
