@@ -449,7 +449,7 @@
       <child>imu_link</child>
     </joint>
 
-    <joint name='left_wheel_hinge' type='revolute'>
+    <joint name='left_wheel_joint' type='continuous'>
       <pose>0 0 0 0 0 0</pose>
       <parent>base_link</parent>
       <child>left_wheel</child>
@@ -458,7 +458,7 @@
       </axis>
     </joint>
 
-    <joint name='right_wheel_hinge' type='revolute'>
+    <joint name='right_wheel_joint' type='continuous'>
       <pose>0 0 0 0 0 0</pose>
       <parent>base_link</parent>
       <child>right_wheel</child>
@@ -467,7 +467,7 @@
       </axis>
     </joint>
 
-    <joint name='caster_joint' type='revolute'>
+    <joint name='caster_joint' type='continuous'>
       <pose>0 0 0 0 0 0</pose>
       <parent>base_link</parent>
       <child>caster_wheel</child>
