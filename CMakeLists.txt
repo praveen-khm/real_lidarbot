@@ -58,6 +58,7 @@ install(PROGRAMS
  scripts/odometry_node.py
  scripts/go_to_goal_node.py
  scripts/rviz_click_to_2d_node.py
+ scripts/joystick_pad_node.py
  DESTINATION lib/${PROJECT_NAME}
 )
 
