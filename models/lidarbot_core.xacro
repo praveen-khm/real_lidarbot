@@ -156,7 +156,7 @@
       </geometry>
     </collision>
 
-    <xacro:box_inertia mass="0.864" width="${base_width}" depth="${base_length}" height="${base_height}">
+    <xacro:box_inertia mass="0.864" length="${base_length}" width="${base_width}" height="${base_height}">
       <origin xyz="0 0 -0.0125" rpy="0 0 0"/>
     </xacro:box_inertia>
   </link>

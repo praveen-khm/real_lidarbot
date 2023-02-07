@@ -15,7 +15,6 @@ def generate_launch_description():
     # Set the path to different files and folders
     pkg_share = FindPackageShare(package='real_lidarbot').find('real_lidarbot')
     pkg_gazebo_ros = FindPackageShare(package='gazebo_ros').find('gazebo_ros')
-    # default_launch_dir = os.path.join(pkg_share, 'launch')
     default_rviz_config_path = os.path.join(pkg_share, 'rviz/rviz_basic_settings.rviz')
     default_urdf_model_path = os.path.join(pkg_share, 'models/lidarbot.urdf.xacro')
     world_filename = 'obstacles.world'

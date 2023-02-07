@@ -2,13 +2,17 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
     <!-- Some standard inertial calculations, obtained from: https://en.wikipedia.org/wiki/List_of_moments_of_inertia -->
-    <xacro:macro name="box_inertia" params="mass width height depth *origin">
+    <xacro:macro name="box_inertia" params="mass length width height *origin">
+    <!-- <xacro:macro name="box_inertia" params="mass width height depth *origin"> -->
         <inertial>
             <xacro:insert_block name="origin"/>
             <mass value="${mass}"/>
-            <inertia ixx="${(mass/12) * (height*height + depth*depth)}" ixy="0.0" ixz="0.0" 
+            <inertia ixx="${(mass/12) * (width*width + height*height)}" ixy="0.0" ixz="0.0" 
+                    iyy="${(mass/12) * (length*length + height*height)}" iyz="0.0" 
+                    izz="${(mass/12) * (length*length + width*width)}"/>
+            <!-- <inertia ixx="${(mass/12) * (height*height + depth*depth)}" ixy="0.0" ixz="0.0" 
                     iyy="${(mass/12) * (width*width + depth*depth)}" iyz="0.0" 
-                    izz="${(mass/12) * (width*width + height*height)}"/>
+                    izz="${(mass/12) * (width*width + height*height)}"/> -->
         </inertial>
     </xacro:macro>
 
