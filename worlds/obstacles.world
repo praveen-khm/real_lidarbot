@@ -582,7 +582,7 @@
     <!-- Import lidarbot -->
     <include>
       <!-- Set the location to spawn lidarbot -->
-      <pose> 0 0 0 0 0 0</pose>
+      <pose>0 0 0 0 0 0</pose>
       <uri>model://lidarbot_description</uri>
     </include>
   </world>
