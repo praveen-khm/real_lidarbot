@@ -264,7 +264,7 @@
     </link>
 
     <!-- Left wheel link  -->
-    <link name='left_wheel'>
+    <link name='left_wheel_link'>
       <pose>-0.0288 0.055 0 0 1.5707 1.5707</pose>
       <inertial>
         <mass>0.031</mass>
@@ -296,7 +296,7 @@
     </link>
 
     <!-- Right robot wheel  -->
-    <link name='right_wheel'>
+    <link name='right_wheel_link'>
       <pose>-0.0288 -0.064 0 0 1.5707 1.5707</pose>
       <inertial>
         <mass>0.031</mass>
