@@ -34,7 +34,7 @@
       <visual>
         <!-- <origin xyz="0 0 ${base_height}" rpy="0 0 0"/> -->
         <!-- <origin xyz="0 0 ${(wheel_outer_radius+wheel_zoff)}" rpy="0 0 0"/> -->
-        <origin xyz="0 0 -0.0125" rpy="0 0 0"/>
+        <!-- <origin xyz="0 0 -0.0125" rpy="0 0 0"/> -->
           <geometry>
               <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/robot_base_link.dae" />
           </geometry>
