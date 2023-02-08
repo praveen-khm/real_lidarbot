@@ -192,7 +192,7 @@
     <collision>
       <origin xyz="0 0 -0.0065" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius="${wheel_outer_radius+0.01}" length="${wheel_height}"/>
+        <cylinder radius="${wheel_outer_radius}" length="${wheel_height}"/>
       </geometry>
     </collision>
 
