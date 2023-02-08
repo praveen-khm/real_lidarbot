@@ -28,6 +28,7 @@ def generate_launch_description():
     use_rviz = LaunchConfiguration('use_rviz')
     use_sim_time = LaunchConfiguration('use_sim_time')
     use_simulator = LaunchConfiguration('use_simulator')
+    use_joystick = LaunchConfiguration('use_joystick')
     world = LaunchConfiguration('world')
     
     # Declare the launch arguments  
@@ -51,6 +52,11 @@ def generate_launch_description():
         default_value='True',
         description='Whether to start the robot state publisher')
     
+    declare_joystick_cmd = DeclareLaunchArgument(
+        name='use_joystick',
+        default_value='False',
+        description='Whether to run joystick node')
+
     declare_use_rviz_cmd = DeclareLaunchArgument(
         name='use_rviz',
         default_value='True',
@@ -109,6 +115,20 @@ def generate_launch_description():
         output='screen',
         arguments=['-d', rviz_config_file])
     
+    # Launch the inbuilt ros2 joy node
+    start_joy_node_cmd = Node(
+        condition=IfCondition(use_joystick),
+        package='joy',
+        executable='joy_node',
+        name='joy_node')
+
+    # Launch joystick_pad_node 
+    start_joystick_cmd =  Node(
+        condition=IfCondition(use_joystick),
+        package='twd_lidar_robot',
+        executable='joystick_pad_node.py',
+        name='joystick_pad_node')
+    
     # Create the launch description and populate
     ld = LaunchDescription()
     
@@ -118,7 +138,8 @@ def generate_launch_description():
     ld.add_action(declare_simulator_cmd)
     ld.add_action(declare_use_robot_state_pub_cmd)  
     ld.add_action(declare_use_sim_time_cmd)
-    ld.add_action(declare_use_rviz_cmd) 
+    ld.add_action(declare_use_rviz_cmd)
+    ld.add_action(declare_joystick_cmd)
     ld.add_action(declare_use_simulator_cmd)
     ld.add_action(declare_world_cmd)
     
@@ -127,6 +148,8 @@ def generate_launch_description():
     ld.add_action(start_gazebo_server_cmd)
     ld.add_action(start_gazebo_client_cmd)
     ld.add_action(start_robot_state_publisher_cmd)
+    ld.add_action(start_joy_node_cmd)
+    ld.add_action(start_joystick_cmd)
     ld.add_action(start_rviz_cmd)
     
     return ld

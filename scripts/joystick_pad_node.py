@@ -13,7 +13,7 @@ from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Joy
 
-# JoystickPad class inheriting from the Node class
+# JoystickPad class 
 class JoystickPad(Node):
     def __init__(self):
         super().__init__('joystick_node')
@@ -29,26 +29,25 @@ class JoystickPad(Node):
             self.joy_callback,
             5
         )
-        self.joy_subscription # Added to prevent unused variable warning
 
         # Create publisher for /cmd_vel topic of message type Twist
         self.cmd_vel_publisher = self.create_publisher(Twist, 'cmd_vel', 10)
 
     def joy_callback(self, msg):
         '''
-        This method is called once a Joy message is received on the /joy topic.
-        It translates buttons on a generic game controller into speed and spin values
-        to be published to the /cmd_vel topic.
+            This method is called once a Joy message is received on the /joy topic.
+            It translates buttons on a generic game controller into speed and spin values
+            to be published to the /cmd_vel topic.
 
-        Using:
+            Using:
 
-        Move right joystick left/right for corresponding left/right motion (rotation)
-        Move left joystick forward/backward for corresponding forward/backward motion (translation)
-        R2 for emergency stop 
+            Move right joystick left/right for corresponding left/right motion (rotation)
+            Move left joystick forward/backward for corresponding forward/backward motion (translation)
+            R2 for emergency stop 
 
-        Rstick left/right         axes[2]    +1 (left)    to -1 (right)
-        Lstick forward/backward   axes[1]    +1 (forward) to -1 (backward)
-        R2                        buttons[7]  1 pressed, 0 otherwise
+            Rstick left/right         axes[2]    +1 (left)    to -1 (right)
+            Lstick forward/backward   axes[1]    +1 (forward) to -1 (backward)
+            R2                        buttons[7]  1 pressed, 0 otherwise
         '''
 
         # Map left/right movement to self.spin, set to zero if below 0.10
