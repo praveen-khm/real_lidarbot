@@ -204,7 +204,7 @@
   <joint name="right_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="right_wheel"/>
-    <origin xyz="-0.028 -0.065 -${wheel_zoff}" rpy="${-pi/2} 0 ${-pi}"/>
+    <origin xyz="-0.028 -0.065 -${wheel_zoff}" rpy="${pi/2} 0 ${-pi}"/>
     <axis xyz="0 0 1"/>
   </joint>
 
