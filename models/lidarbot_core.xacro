@@ -23,16 +23,17 @@
   <link name="base_footprint"/>
 
   <joint name="base_joint" type="fixed">
-    <parent link="base_link"/>
-    <child link="base_footprint"/>
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
     <!-- <origin xyz="0 0 0" rpy="0 0 0"/> -->
-    <origin xyz="0 0 ${-(wheel_outer_radius+wheel_zoff)}" rpy="0 0 0"/>
+    <origin xyz="0 0 ${(wheel_outer_radius+wheel_zoff)}" rpy="0 0 0"/>
+    <!-- <origin xyz="0 0 ${-(wheel_outer_radius+wheel_zoff)}" rpy="0 0 0"/> -->
   </joint>
   
   <!-- Robot Base -->
   <link name="base_link">
       <visual>
-        <origin xyz="0 0 ${wheel_zoff}" rpy="0 0 0"/>
+        <origin xyz="0 0 ${wheel_outer_radius+wheel_zoff}" rpy="0 0 0"/>
         <!-- <origin xyz="0 0 ${-wheel_zoff}" rpy="0 0 0"/> -->
           <geometry>
               <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/robot_base_link.dae" />
@@ -164,7 +165,7 @@
   <!-- Left Wheel -->
   <link name="left_wheel">
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <!-- <origin xyz="0 0 0" rpy="0 0 0"/> -->
         <geometry>
           <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/left_wheel.dae" />
         </geometry>
@@ -191,7 +192,7 @@
   <!-- Right Wheel -->
   <link name="right_wheel">
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <!-- <origin xyz="0 0 0" rpy="0 0 0"/> -->
       <geometry>
         <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/right_wheel.dae"/>
       </geometry>
