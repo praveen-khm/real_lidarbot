@@ -6,11 +6,14 @@ from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration, Command
 from launch.actions import DeclareLaunchArgument
 from launch_ros.actions import Node
+from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
 
     # Process URDF file
-    pkg_path = os.path.join(get_package_share_directory('real_lidarbot'))
+    # pkg_path = os.path.join(get_package_share_directory('real_lidarbot'))
+
+    pkg_path = FindPackageShare(package='real_lidarbot').find('real_lidarbot')
     urdf_file = os.path.join(pkg_path, 'models/lidarbot.urdf.xacro')
 
     # Launch config variables
@@ -30,8 +33,8 @@ def generate_launch_description():
     )
 
     # Robot state publisher parameter values
-    robot_description_config = Command([urdf_file, ' use_ros2_control:=', use_ros2_control, ' sim_mode:=', use_sim_time])
-    # robot_description_config = Command(['xacro', urdf_file, ' use_ros2_control:=', use_ros2_control, ' sim_mode:=', use_sim_time])
+    # robot_description_config = Command([urdf_file, ' use_ros2_control:=', use_ros2_control, ' sim_mode:=', use_sim_time])
+    robot_description_config = Command(['xacro', urdf_file, ' use_ros2_control:=', use_ros2_control, ' sim_mode:=', use_sim_time])
     params = {'robot_description': robot_description_config, 'use_sim_time': use_sim_time}
 
     # Start robot state publisher
