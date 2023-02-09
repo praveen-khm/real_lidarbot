@@ -30,7 +30,8 @@ def generate_launch_description():
     )
 
     # Robot state publisher parameter values
-    robot_description_config = Command(['xacro', urdf_file, ' use_ros2_control:=', use_ros2_control, ' sim_mode:=', use_sim_time])
+    robot_description_config = Command([urdf_file, ' use_ros2_control:=', use_ros2_control, ' sim_mode:=', use_sim_time])
+    # robot_description_config = Command(['xacro', urdf_file, ' use_ros2_control:=', use_ros2_control, ' sim_mode:=', use_sim_time])
     params = {'robot_description': robot_description_config, 'use_sim_time': use_sim_time}
 
     # Start robot state publisher
