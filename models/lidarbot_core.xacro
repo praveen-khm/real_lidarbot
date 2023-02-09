@@ -23,7 +23,6 @@
     <parent link="base_footprint"/>
     <child link="base_link"/>
     <origin xyz="0 0 ${(wheel_outer_radius+wheel_zoff)}" rpy="0 0 0"/>
-    <!-- <origin xyz="0 0 ${-(wheel_outer_radius+wheel_zoff)}" rpy="0 0 0"/> -->
   </joint>
   
   <!-- Robot Base -->
@@ -213,7 +212,8 @@
   <link name="caster_wheel">
     <visual>
       <geometry>
-        <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/caster_wheel.dae"/>
+        <mesh filename="package://models/lidarbot_description/meshes/caster_wheel.dae"/>
+        <!-- <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/caster_wheel.dae"/> -->
       </geometry>
     </visual>
     <collision>
