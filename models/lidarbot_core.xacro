@@ -3,15 +3,16 @@
 
   <xacro:include filename="inertial_macros.xacro"/>
 
-  <!-- Robot's chassis measurements -->
+  <!-- Robot's chassis properties -->
   <xacro:property name="base_length" value="0.21"/>
   <xacro:property name="base_width" value="0.11"/>
   <xacro:property name="base_height" value="0.035"/>
 
-  <!-- Robot's wheel measurements -->
+  <!-- Robot's wheel properties -->
   <xacro:property name="wheel_outer_radius" value="0.0325"/>
   <xacro:property name="wheel_inner_radius" value="0.0225"/>
   <xacro:property name="wheel_height" value="0.025"/>
+  <xacro:property name="wheel_mass" value="0.031"/>
 
   <!-- Distance between centre of wheel and robot base/chassis -->
   <xacro:property name="wheel_zoff" value="0.0125"/>
@@ -170,9 +171,14 @@
       </geometry>
     </collision>
 
-    <xacro:thick_walled_cylinder_inertia mass="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
+    <!-- <xacro:thick_walled_cylinder_inertia mass="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
       <origin xyz="0 0 0" rpy="0 0 0"/>
-    </xacro:thick_walled_cylinder_inertia>
+    </xacro:thick_walled_cylinder_inertia> -->
+
+    <xacro:cylinder_inertia mass="${wheel_mass}" length="${wheel_height}" radius="${wheel_outer_radius}">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </xacro:cylinder_inertia>
+
   </link>
 
   <joint name="left_wheel_joint" type="continuous">
@@ -196,9 +202,12 @@
       </geometry>
     </collision>
 
-    <xacro:thick_walled_cylinder_inertia mass="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
+    <!-- <xacro:thick_walled_cylinder_inertia mass="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
       <origin xyz="0 0 0" rpy="0 0 0"/>
-    </xacro:thick_walled_cylinder_inertia>
+    </xacro:thick_walled_cylinder_inertia> -->
+    <xacro:cylinder_inertia mass="${wheel_mass}" length="${wheel_height}" radius="${wheel_outer_radius}">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </xacro:cylinder_inertia>
   </link>
 
   <joint name="right_wheel_joint" type="continuous">
@@ -212,8 +221,7 @@
   <link name="caster_wheel">
     <visual>
       <geometry>
-        <mesh filename="package://models/lidarbot_description/meshes/caster_wheel.dae"/>
-        <!-- <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/caster_wheel.dae"/> -->
+        <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/caster_wheel.dae"/>
       </geometry>
     </visual>
     <collision>

@@ -12,7 +12,6 @@ def generate_launch_description():
 
     # Process URDF file
     # pkg_path = os.path.join(get_package_share_directory('real_lidarbot'))
-
     pkg_path = FindPackageShare(package='real_lidarbot').find('real_lidarbot')
     urdf_model_path = os.path.join(pkg_path, 'models/lidarbot.urdf.xacro')
     use_sim_time = LaunchConfiguration('use_sim_time')
@@ -23,12 +22,6 @@ def generate_launch_description():
         default_value=urdf_model_path, 
         description='Absolute path to robot urdf file')
     
-    # Launch config variables
-    urdf_model = LaunchConfiguration('urdf_model')
-    use_sim_time = LaunchConfiguration('use_sim_time')
-    use_ros2_control = LaunchConfiguration('use_ros2_control')
-
-    # Declare launch arguments
     declare_use_sim_time_cmd = DeclareLaunchArgument(
         name='use_sim_time',
         default_value='False',
@@ -39,6 +32,11 @@ def generate_launch_description():
         default_value='False',
         description='Use ros2_control if true'
     )
+    
+    # Launch config variables
+    urdf_model = LaunchConfiguration('urdf_model')
+    use_sim_time = LaunchConfiguration('use_sim_time')
+    use_ros2_control = LaunchConfiguration('use_ros2_control')
 
     # Robot state publisher parameter values
     # robot_description_config = Command([urdf_file, ' use_ros2_control:=', use_ros2_control, ' sim_mode:=', use_sim_time])
