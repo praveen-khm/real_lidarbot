@@ -240,7 +240,6 @@
     <parent link="base_link"/>
     <child link="caster_wheel"/>
     <origin xyz="0.0925 0 -0.031" rpy="0 0 ${pi/2}"/>
-    <axis xyz="0 0 1"/>
   </joint>
 
 </robot>
