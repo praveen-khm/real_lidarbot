@@ -458,7 +458,7 @@
       </axis>
     </joint>
 
-    <joint name='right_wheel_joint' type='continuous'>
+    <joint name='right_wheel_joint' type='revolute'>
       <pose>0 0 0 0 0 0</pose>
       <parent>base_link</parent>
       <child>right_wheel</child>
