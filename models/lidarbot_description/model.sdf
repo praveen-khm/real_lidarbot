@@ -339,10 +339,10 @@
         <surface>
           <friction>
             <ode>
-              <mu>0.001</mu>
-              <mu2>0.001</mu2>
-              <!-- <mu>0.5</mu>
-              <mu2>0.5</mu2> -->
+              <!-- <mu>0.001</mu>
+              <mu2>0.001</mu2> -->
+              <mu>0.5</mu>
+              <mu2>0.5</mu2>
               <slip1>0.01</slip1>
               <slip2>0.01</slip2>
               <fdir1>0 0 1</fdir1>
