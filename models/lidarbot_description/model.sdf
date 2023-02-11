@@ -504,7 +504,7 @@
       <publish_odom_tf>true</publish_odom_tf>     
       <!-- When true, publish coordinate transform from base_link to the wheels -->
       <!-- The robot_state_publisher package is often used to publish this transform -->   
-      <publish_wheel_tf>true</publish_wheel_tf>
+      <publish_wheel_tf>false</publish_wheel_tf>
       <!-- Topic to publish nav_msgs/Odometry messages, defaults to `odom` -->
       <odometry_topic>odom</odometry_topic>
       <!-- Odometry frame, defaults to `odom` -->
