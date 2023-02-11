@@ -115,9 +115,9 @@ Visualization Manager:
         base_link:
           Value: false
         camera_link:
-          Value: true
+          Value: false 
         caster_wheel:
-          Value: true
+          Value: false
         imu_link:
           Value: false
         lidar_link:

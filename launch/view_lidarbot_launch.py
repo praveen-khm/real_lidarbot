@@ -5,7 +5,7 @@ import os
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.conditions import IfCondition, UnlessCondition
-from launch.substitutions import Command, LaunchConfiguration
+from launch.substitutions import LaunchConfiguration
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 from launch_ros.actions import Node
@@ -13,20 +13,15 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     
-    # Set package path
+    # Set the path to different files and folders
     pkg_share = FindPackageShare(package='real_lidarbot').find('real_lidarbot')
-
-    # Set path to the RViz configuration settings
     rviz_config_path = os.path.join(pkg_share, 'rviz/view_lidarbot.rviz')
-
-    # Set the path to the URDF file
     urdf_model_path = os.path.join(pkg_share, 'models/lidarbot.urdf.xacro')
 
     # Launch configuration variables specific to simulation
     gui = LaunchConfiguration('gui')
     urdf_model = LaunchConfiguration('urdf_model')
     rviz_config_file = LaunchConfiguration('rviz_config_file')
-    # use_robot_state_pub = LaunchConfiguration('use_robot_state_pub')
     use_rviz = LaunchConfiguration('use_rviz')
     use_sim_time = LaunchConfiguration('use_sim_time')
     
@@ -77,18 +72,10 @@ def generate_launch_description():
         executable='joint_state_publisher_gui',
         name='joint_state_publisher_gui')
     
-    # # Subscribe to the joint states of the robot, and publish the 3D pose of each link.
-    # start_robot_state_publisher_cmd = Node(
-    #     condition=IfCondition(use_robot_state_pub),
-    #     package='robot_state_publisher',
-    #     executable='robot_state_publisher',
-    #     parameters=[{'use_sim_time': use_sim_time, 
-    #     'robot_description': Command(['xacro ', urdf_model])}],
-    #     arguments=[default_urdf_model_path])
-    
+    # Start robot state publisher
     start_robot_state_publisher_cmd = IncludeLaunchDescription(
-                        PythonLaunchDescriptionSource([os.path.join(pkg_share, 'launch', 'robot_state_publisher_launch.py')]), 
-                        launch_arguments={'use_sim_time': use_sim_time, 'urdf_model': urdf_model}.items())
+        PythonLaunchDescriptionSource([os.path.join(pkg_share, 'launch', 'robot_state_publisher_launch.py')]), 
+        launch_arguments={'use_sim_time': use_sim_time, 'urdf_model': urdf_model}.items())
 
     # Launch RViz
     start_rviz_cmd = Node(
