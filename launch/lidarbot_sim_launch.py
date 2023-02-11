@@ -49,7 +49,7 @@ def generate_launch_description():
     
     declare_joystick_cmd = DeclareLaunchArgument(
         name='use_joystick',
-        default_value='False',
+        default_value='True',
         description='Whether to run joystick node')
 
     declare_use_rviz_cmd = DeclareLaunchArgument(
