@@ -451,7 +451,7 @@
       <child>imu_link</child>
     </joint>
 
-    <joint name='left_wheel_joint' type='continuous'>
+    <joint name='left_wheel_joint' type='revolute'>
       <pose>0 0 0 0 0 0</pose>
       <parent>base_link</parent>
       <child>left_wheel</child>
@@ -460,7 +460,7 @@
       </axis>
     </joint>
 
-    <joint name='right_wheel_joint' type='continuous'>
+    <joint name='right_wheel_joint' type='revolute'>
       <pose>0 0 0 0 0 0</pose>
       <parent>base_link</parent>
       <child>right_wheel</child>
@@ -497,7 +497,7 @@
       <max_wheel_torque>15</max_wheel_torque>
       <max_wheel_acceleration>1.0</max_wheel_acceleration>
       <command_topic>cmd_vel</command_topic>
-
+      
       <!-- Output. When false, publish no wheel odometry data to a ROS topic -->
       <publish_odom>true</publish_odom>
       <!-- When true, publish coordinate transform from odom to base_footprint -->
