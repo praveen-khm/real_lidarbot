@@ -449,7 +449,7 @@
       <child>imu_link</child>
     </joint>
 
-    <joint name='left_wheel_joint' type='continuous'>
+    <joint name='left_wheel_joint' type='revolute'>
       <pose>0 0 0 0 0 0</pose>
       <parent>base_link</parent>
       <child>left_wheel</child>
