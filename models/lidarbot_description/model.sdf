@@ -423,7 +423,7 @@
     <link name='camera_link'>
       <pose>0.0825 -0.001 0.055 0 0 0</pose>
       <collision name='camera_collision'>
-        <pose>0 0 0.005 0 0 1.5707</pose>
+        <pose>0.002 0 0.003 0 0 1.5707</pose>
         <geometry>
           <box>
             <size>0.1 0.025 0.022</size>
