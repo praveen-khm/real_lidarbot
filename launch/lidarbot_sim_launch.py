@@ -85,13 +85,6 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py')),
         condition=IfCondition(PythonExpression([use_simulator, ' and not ', headless])))
     
-    # # Publish the joint state values for the non-fixed joints in the URDF file.
-    # start_joint_state_publisher_cmd = Node(
-    #     # condition=UnlessCondition(gui),
-    #     package='joint_state_publisher',
-    #     executable='joint_state_publisher',
-    #     name='joint_state_publisher')
-    
     # Start robot state publisher
     start_robot_state_publisher_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(pkg_share, 'launch', 'robot_state_publisher_launch.py')]), 
@@ -134,7 +127,6 @@ def generate_launch_description():
     ld.add_action(declare_world_cmd)
     
     # Add any actions
-    # ld.add_action(start_joint_state_publisher_cmd)
     ld.add_action(start_gazebo_server_cmd)
     ld.add_action(start_gazebo_client_cmd)
     ld.add_action(start_robot_state_publisher_cmd)

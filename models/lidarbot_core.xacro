@@ -171,10 +171,6 @@
       </geometry>
     </collision>
 
-    <!-- <xacro:thick_walled_cylinder_inertia mass="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-    </xacro:thick_walled_cylinder_inertia> -->
-
     <xacro:cylinder_inertia mass="${wheel_mass}" length="${wheel_height}" radius="${wheel_outer_radius}">
       <origin xyz="0 0 0" rpy="0 0 0"/>
     </xacro:cylinder_inertia>
@@ -203,15 +199,11 @@
       </geometry>
     </collision>
 
-    <!-- <xacro:thick_walled_cylinder_inertia mass="0.031" outer_radius="${wheel_outer_radius}" inner_radius="${wheel_inner_radius}" height="${wheel_height}">
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-    </xacro:thick_walled_cylinder_inertia> -->
     <xacro:cylinder_inertia mass="${wheel_mass}" length="${wheel_height}" radius="${wheel_outer_radius}">
       <origin xyz="0 0 0" rpy="0 0 0"/>
     </xacro:cylinder_inertia>
   </link>
 
-  <!-- Stopped here -->
   <joint name="right_wheel_joint" type="revolute">
     <parent link="base_link"/>
     <child link="right_wheel"/>
