@@ -432,7 +432,7 @@
         </geometry>
       </collision>
       <visual name="camera_visual">
-        <pose>0 0 0 1.5707 0 1.5707</pose>
+        <!-- <pose>0 0 0 1.5707 0 1.5707</pose> -->
         <geometry>
           <mesh>
             <uri>model://lidarbot_description/meshes/d415.dae</uri>
