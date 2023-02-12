@@ -416,8 +416,13 @@
     </link>
 
     <!-- Depth camera -->
-    <link name='camera_link'>
+    <link name="camera_optical_link">
       <pose>0.095 -0.001 0.055 1.5707 0 1.5707</pose>
+    </link>
+
+    <link name='camera_link'>
+      <pose>0.095 -0.001 0.055 0 0 0</pose>
+      <!-- <pose>0.095 -0.001 0.055 1.5707 0 1.5707</pose> -->
       <collision name='camera_collision'>
         <pose>0 0 -0.01 0 0 0</pose>
         <geometry>
