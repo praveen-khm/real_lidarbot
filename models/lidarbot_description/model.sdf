@@ -514,8 +514,8 @@
     </joint>
 
     <joint name="camera_optical_joint" type="fixed">
-      <pose>0 0 0 -1.5707 0 -1.5707</pose>
-      <!-- <pose>0 0 0 0 0 0</pose> -->
+      <!-- <pose>0 0 0 -1.5707 0 -1.5707</pose> -->
+      <pose>0 0 0 0 0 0</pose>
       <parent>camera_link</parent>
       <child>camera_link_optical</child>
     </joint>
