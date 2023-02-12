@@ -440,7 +440,7 @@
       </visual>
       
       <sensor type='camera' name='camera'>
-        <pose>0 0 0 0 0 0</pose>
+        <pose>0 0 0 -1.5707 0 0</pose>
         <always_on>true</always_on>
         <visualize>true</visualize>
         <update_rate>10</update_rate>
