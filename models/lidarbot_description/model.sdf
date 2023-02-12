@@ -421,8 +421,8 @@
     </link>
 
     <link name='camera_link'>
-      <pose>0.095 -0.001 0.055 1.5707 0 1.5707</pose>
-      <!-- <pose>0.095 -0.001 0.055 0 0 0</pose> -->
+      <!-- <pose>0.12 -0.001 0.055 0 0 0</pose> -->
+      <pose>0.095 -0.001 0.055 0 0 0</pose>
       <collision name='camera_collision'>
         <pose>0 0 -0.01 0 0 0</pose>
         <geometry>
@@ -432,6 +432,7 @@
         </geometry>
       </collision>
       <visual name="camera_visual">
+        <pose>-0.0125 0 0 1.5707 0 1.5707</pose>
         <!-- <pose>0 0 0 1.5707 0 1.5707</pose> -->
         <geometry>
           <mesh>
