@@ -511,38 +511,12 @@
       <child>camera_link</child>
     </joint>
 
-    <joint name='camera_optical_joint' type='fixed'>
+    <joint name="camera_optical_joint" type="fixed">
+      <!-- <pose>0 0 0 -1.5707 0 -1.5707</pose> -->
       <pose>0 0 0 0 0 0</pose>
       <parent>camera_link</parent>
       <child>camera_link_optical</child>
     </joint>
-    
-    <!-- Ros2_control  -->
-    <ros2_control name='GazeboSystem' type='system'>
-      <hardware>
-        <plugin>gazebo_ros2_control/GazeboSystem</plugin>
-      </hardware>
-      <joint name='left_wheel_joint'>
-        <command_interface name='velocity'>
-          <param name='min'>-10</param>
-          <param name='max'>10</param>
-        </command_interface>
-        <state_interface name='velocity'/>
-        <state_interface name='position'/>
-      </joint>
-      <joint name='right_wheel_joint'>
-        <command_interface name='velocity'>
-          <param name='min'>-10</param>
-          <param name='max'>10</param>
-        </command_interface>
-        <state_interface name='velocity'/>
-        <state_interface name='position'/>
-      </joint>
-    </ros2_control>
-
-    <plugin name='lidarbot_ros2_control' filename='libgazebo_ros2_control.so'>
-      <parameters>$(find real_lidarbot)/config/my_controllers.yaml</parameters>
-    </plugin>
 
     <!-- Wheel Odometry -->
     <plugin name='lidarbot_diff_drive' filename='libgazebo_ros_diff_drive.so'>
