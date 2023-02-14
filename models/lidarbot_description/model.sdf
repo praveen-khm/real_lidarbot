@@ -544,39 +544,6 @@
       <parameters>$(find real_lidarbot)/config/my_controllers.yaml</parameters>
     </plugin>
 
-    <!-- Wheel Odometry -->
-    <plugin name='lidarbot_diff_drive' filename='libgazebo_ros_diff_drive.so'>
-      <update_rate>25</update_rate>
-      <left_joint>left_wheel_joint</left_joint>
-      <right_joint>right_wheel_joint</right_joint>
-      <wheel_separation>0.134</wheel_separation>
-      <wheel_diameter>0.067</wheel_diameter>
-      <max_wheel_torque>15</max_wheel_torque>
-      <max_wheel_acceleration>1.0</max_wheel_acceleration>
-      <command_topic>cmd_vel</command_topic>
-      
-      <!-- Output. When false, publish no wheel odometry data to a ROS topic -->
-      <publish_odom>true</publish_odom>
-      <!-- When true, publish coordinate transform from odom to base_footprint -->
-      <!-- Addison usually uses the robot_localization package to publish this transform -->   
-      <publish_odom_tf>true</publish_odom_tf>     
-      <!-- When true, publish coordinate transform from base_link to the wheels -->
-      <!-- The robot_state_publisher package is often used to publish this transform -->   
-      <publish_wheel_tf>false</publish_wheel_tf>
-      <!-- Topic to publish nav_msgs/Odometry messages, defaults to `odom` -->
-      <odometry_topic>odom</odometry_topic>
-      <!-- Odometry frame, defaults to `odom` -->
-      <odometry_frame>odom</odometry_frame>
-      <!-- Robot frame to calculate odometry from, defaults to `base_footprint` -->
-      <robot_base_frame>base_footprint</robot_base_frame>
-      <!-- Odometry source, 0 for ENCODER, 1 for WORLD, defaults to WORLD -->
-      <odometry_source>1</odometry_source>
-      <!-- Change the ROS topic we will publish the odometry data to -->
-      <ros>
-        <remapping>odom:=wheel/odometry</remapping>
-      </ros>
-    </plugin>
-
     <!-- Joint State Publisher -->
     <plugin name='lidarbot_joint_state' filename='libgazebo_ros_joint_state_publisher.so'>
       <ros>
