@@ -415,7 +415,7 @@
       </sensor>
     </link>
 
-    <!-- Depth camera -->
+    <!-- Camera -->
     <link name="camera_link_optical">
       <pose>0.0825 -0.001 0.055 -1.5707 0 -1.5707</pose>
     </link>
@@ -423,7 +423,7 @@
     <link name='camera_link'>
       <pose>0.0825 -0.001 0.055 0 0 0</pose>
       <collision name='camera_collision'>
-        <pose>0.0015 0 0.00225 0 0 1.5707</pose>
+        <pose>0.0015 0 0.002 0 0 1.5707</pose>
         <geometry>
           <box>
             <size>0.1 0.025 0.022</size>
