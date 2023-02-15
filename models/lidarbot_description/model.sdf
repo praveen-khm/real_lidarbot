@@ -518,7 +518,7 @@
     </joint>
     
     <!-- Ros2_control  -->
-    <ros2_control name='GazeboSystem' type='system'>
+    <!-- <ros2_control name='GazeboSystem' type='system'>
       <hardware>
         <plugin>gazebo_ros2_control/GazeboSystem</plugin>
       </hardware>
@@ -542,16 +542,16 @@
 
     <plugin name='lidarbot_ros2_control' filename='libgazebo_ros2_control.so'>
       <parameters>$(find real_lidarbot)/config/my_controllers.yaml</parameters>
-    </plugin>
+    </plugin> -->
 
     <!-- Joint State Publisher -->
-    <plugin name='lidarbot_joint_state' filename='libgazebo_ros_joint_state_publisher.so'>
+    <!-- <plugin name='lidarbot_joint_state' filename='libgazebo_ros_joint_state_publisher.so'>
       <ros>
         <remapping>~/out:=joint_states</remapping>
       </ros>
       <update_rate>25</update_rate>
       <joint_name>left_wheel_joint</joint_name>
       <joint_name>right_wheel_joint</joint_name>
-    </plugin>
+    </plugin> -->
   </model>
 </sdf>
