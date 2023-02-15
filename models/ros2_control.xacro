@@ -23,6 +23,8 @@
       </joint>
     </ros2_control>
 
-    <plugin name='lidarbot_ros2_control' filename='libgazebo_ros2_control.so'>
-      <parameters>$(find real_lidarbot)/config/my_controllers.yaml</parameters>
-    </plugin>
+    <gazebo>
+      <plugin name='lidarbot_ros2_control' filename='libgazebo_ros2_control.so'>
+        <parameters>$(find real_lidarbot)/config/my_controllers.yaml</parameters>
+      </plugin>
+    </gazebo>

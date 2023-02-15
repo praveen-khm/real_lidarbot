@@ -444,7 +444,7 @@
         <visualize>true</visualize>
         <update_rate>10</update_rate>
         <camera>
-          <horizontal_fov>1.204</horizontal_fov>
+          <horizontal_fov>1.089</horizontal_fov>
           <image>
             <format>R8G8B8</format>
             <width>640</width>
