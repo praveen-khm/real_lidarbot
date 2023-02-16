@@ -31,8 +31,8 @@
       <visual>
         <origin xyz="0 0 ${-wheel_zoff}" rpy="0 0 0"/>
           <geometry>
-              <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/robot_base_link.dae" />
-          </geometry>
+              <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/robot_base.dae" />
+          </geometryk>
       </visual>
       <collision>
         <geometry>
