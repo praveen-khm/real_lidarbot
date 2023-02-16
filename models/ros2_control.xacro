@@ -28,3 +28,5 @@
         <parameters>$(find real_lidarbot)/config/my_controllers.yaml</parameters>
       </plugin>
     </gazebo>
+
+</robot>
