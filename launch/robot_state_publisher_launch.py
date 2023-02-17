@@ -39,9 +39,8 @@ def generate_launch_description():
         package='robot_state_publisher',
         executable='robot_state_publisher',
         parameters=[{
-                    'use_sim_time': use_sim_time, 
-                    'robot_description': Command(['xacro ', urdf_model]), 
-                    'urdf_model': urdf_model_path,
+                    'robot_description': Command(['xacro ' , urdf_model]), 
+                    'use_sim_time': use_sim_time,
                     'use_ros2_control': use_ros2_control}])
     
     # Create the launch description and populate
