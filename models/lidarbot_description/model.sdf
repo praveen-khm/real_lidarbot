@@ -29,7 +29,7 @@
       <visual name='base_link_visual'>
         <geometry>
           <mesh>
-            <uri>model://lidarbot_description/meshes/robot_base.dae</uri>
+            <uri>model://lidarbot_description/meshes/robot_base_link.dae</uri>
           </mesh>
         </geometry>
       </visual>
