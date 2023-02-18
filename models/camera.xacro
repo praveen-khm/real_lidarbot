@@ -5,7 +5,7 @@
   <link name="camera_link">
     <visual>
       <geometry>
-        <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/d415.dae"/>
+        <mesh filename="file://$(find real_lidarbot)/models/lidarbot_description/meshes/d415.dae"/>
       </geometry>
     </visual> 
     <collision>
