@@ -31,14 +31,13 @@
       <visual>
         <origin xyz="0 0 ${-wheel_zoff}" rpy="0 0 0"/>
           <geometry>
-              <!-- <mesh filename="lidarbot_description/meshes/robot_base.dae" /> -->
-              <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/robot_base.dae" />
+              <mesh filename="file://$(find real_lidarbot)/models/lidarbot_description/meshes/robot_base.dae" />
+              <!-- <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/robot_base.dae" /> -->
           </geometry>
       </visual>
       <collision>
         <geometry>
-          <!-- <box size="${base_length} ${base_width} ${base_height}"/> -->
-          <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/robot_base.dae" />
+          <box size="${base_length} ${base_width} ${base_height}"/>
         </geometry>
       </collision>
 
