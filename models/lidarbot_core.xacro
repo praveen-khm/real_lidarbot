@@ -37,7 +37,8 @@
       </visual>
       <collision>
         <geometry>
-          <box size="${base_length} ${base_width} ${base_height}"/>
+          <!-- <box size="${base_length} ${base_width} ${base_height}"/> -->
+          <mesh filename="package://real_lidarbot/models/lidarbot_description/meshes/robot_base.dae" />
         </geometry>
       </collision>
 
