@@ -4,7 +4,7 @@
 import os
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, LaunchConfiguration, PythonExpression
@@ -108,7 +108,8 @@ def generate_launch_description():
 
     # Spawn robot in Gazebo
     start_spawner_cmd = Node(
-        package=pkg_gazebo_ros,
+        condition=IfCondition(use_simulator),
+        package='gazebo_ros',
         executable='spawn_entity.py',
         output='screen',
         arguments=['-topic', 'robot_description',
