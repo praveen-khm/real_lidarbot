@@ -28,7 +28,7 @@ def generate_launch_description():
     rviz_config_file = LaunchConfiguration('rviz_config_file')
     use_rviz = LaunchConfiguration('use_rviz')
     use_sim_time = LaunchConfiguration('use_sim_time')
-    # use_simulator = LaunchConfiguration('use_simulator')
+    use_simulator = LaunchConfiguration('use_simulator')
     use_joystick = LaunchConfiguration('use_joystick')
     world = LaunchConfiguration('world')
     
@@ -63,10 +63,10 @@ def generate_launch_description():
         default_value='True',
         description='Use simulation (Gazebo) clock if true')
     
-    # declare_use_simulator_cmd = DeclareLaunchArgument(
-    #     name='use_simulator', 
-    #     default_value='True',
-    #     description='Whether to start the simulator')
+    declare_use_simulator_cmd = DeclareLaunchArgument(
+        name='use_simulator', 
+        default_value='True',
+        description='Whether to start the simulator')
     
     declare_world_cmd = DeclareLaunchArgument(
         name='world',
@@ -103,6 +103,7 @@ def generate_launch_description():
     # Launch Gazebo 
     start_gazebo_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(pkg_gazebo_ros, 'launch', 'gazebo.launch.py')]),
+        condition=IfCondition(use_simulator),
         launch_arguments={'world': world}.items())   
 
     # Spawn robot in Gazebo
@@ -137,7 +138,7 @@ def generate_launch_description():
     ld.add_action(declare_use_sim_time_cmd)
     ld.add_action(declare_use_rviz_cmd)
     ld.add_action(declare_joystick_cmd)
-    # ld.add_action(declare_use_simulator_cmd)
+    ld.add_action(declare_use_simulator_cmd)
     ld.add_action(declare_world_cmd)
     
     # Add any actions
