@@ -2,6 +2,7 @@
 # File adapted from https://automaticaddison.com
 
 import os
+
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.conditions import IfCondition
@@ -101,7 +102,8 @@ def generate_launch_description():
     
     # Launch Gazebo 
     start_gazebo_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(pkg_gazebo_ros, 'launch', 'gazebo.launch.py')))   
+        PythonLaunchDescriptionSource([os.path.join(pkg_gazebo_ros, 'launch', 'gazebo.launch.py')]),
+        launch_arguments={'world': world}.items())   
 
     # Spawn robot in Gazebo
     start_spawner_cmd = Node(
