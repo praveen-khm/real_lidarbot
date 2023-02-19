@@ -22,12 +22,12 @@ def generate_launch_description():
     world_path = os.path.join(pkg_share, 'worlds', world_filename)
 
     # Launch configuration variables specific to simulation
-    headless = LaunchConfiguration('headless')
+    # headless = LaunchConfiguration('headless')
     urdf_model = LaunchConfiguration('urdf_model')
     rviz_config_file = LaunchConfiguration('rviz_config_file')
     use_rviz = LaunchConfiguration('use_rviz')
     use_sim_time = LaunchConfiguration('use_sim_time')
-    use_simulator = LaunchConfiguration('use_simulator')
+    # use_simulator = LaunchConfiguration('use_simulator')
     use_joystick = LaunchConfiguration('use_joystick')
     world = LaunchConfiguration('world')
     
@@ -42,10 +42,10 @@ def generate_launch_description():
         default_value=default_rviz_config_path,
         description='Full path to the RVIZ config file to use')
     
-    declare_simulator_cmd = DeclareLaunchArgument(
-        name='headless',
-        default_value='False',
-        description='Whether to execute gzclient')
+    # declare_simulator_cmd = DeclareLaunchArgument(
+    #     name='headless',
+    #     default_value='False',
+    #     description='Whether to execute gzclient')
     
     declare_joystick_cmd = DeclareLaunchArgument(
         name='use_joystick',
@@ -62,10 +62,10 @@ def generate_launch_description():
         default_value='True',
         description='Use simulation (Gazebo) clock if true')
     
-    declare_use_simulator_cmd = DeclareLaunchArgument(
-        name='use_simulator', 
-        default_value='True',
-        description='Whether to start the simulator')
+    # declare_use_simulator_cmd = DeclareLaunchArgument(
+    #     name='use_simulator', 
+    #     default_value='True',
+    #     description='Whether to start the simulator')
     
     declare_world_cmd = DeclareLaunchArgument(
         name='world',
@@ -75,21 +75,21 @@ def generate_launch_description():
     # Specify the actions
 
     # Start Gazebo server
-    start_gazebo_server_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')),
-        condition=IfCondition(use_simulator),
-        launch_arguments={'world': world}.items())
+    # start_gazebo_server_cmd = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')),
+    #     condition=IfCondition(use_simulator),
+    #     launch_arguments={'world': world}.items())
     
-    # Start Gazebo client    
-    start_gazebo_client_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py')),
-        condition=IfCondition(PythonExpression([use_simulator, ' and not ', headless])))
+    # # Start Gazebo client    
+    # start_gazebo_client_cmd = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py')),
+    #     condition=IfCondition(PythonExpression([use_simulator, ' and not ', headless])))
     
     # Start robot state publisher
     start_robot_state_publisher_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(pkg_share, 'launch', 'robot_state_publisher_launch.py')]), 
         launch_arguments={'use_sim_time': use_sim_time, 'urdf_model': urdf_model}.items())
-    
+
     # Launch RViz
     start_rviz_cmd = Node(
         condition=IfCondition(use_rviz),
@@ -98,6 +98,18 @@ def generate_launch_description():
         name='rviz2',
         output='screen',
         arguments=['-d', rviz_config_file])
+    
+    # Launch Gazebo 
+    start_gazebo_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(pkg_gazebo_ros, 'launch', 'gazebo.launch.py')))   
+
+    # Spawn robot in Gazebo
+    start_spawner_cmd = Node(
+        package=pkg_gazebo_ros,
+        executable='spawn_entity.py',
+        output='screen',
+        arguments=['-topic', 'robot_description',
+                   '-entity', 'lidarbot'])
     
     # Launch the inbuilt ros2 joy node
     start_joy_node_cmd = Node(
@@ -109,9 +121,9 @@ def generate_launch_description():
     # Launch joystick_pad_node 
     start_joystick_cmd =  Node(
         condition=IfCondition(use_joystick),
-        package='real_lidarbot',
-        executable='joystick_pad_node.py',
-        name='joystick_pad_node')
+        package='teleop_twist_joy',
+        executable='teleop_node',
+        name='teleop_node')
     
     # Create the launch description and populate
     ld = LaunchDescription()
@@ -119,19 +131,19 @@ def generate_launch_description():
     # Declare the launch options
     ld.add_action(declare_urdf_model_path_cmd)
     ld.add_action(declare_rviz_config_file_cmd)
-    ld.add_action(declare_simulator_cmd) 
+    # ld.add_action(declare_simulator_cmd) 
     ld.add_action(declare_use_sim_time_cmd)
     ld.add_action(declare_use_rviz_cmd)
     ld.add_action(declare_joystick_cmd)
-    ld.add_action(declare_use_simulator_cmd)
+    # ld.add_action(declare_use_simulator_cmd)
     ld.add_action(declare_world_cmd)
     
     # Add any actions
-    ld.add_action(start_gazebo_server_cmd)
-    ld.add_action(start_gazebo_client_cmd)
     ld.add_action(start_robot_state_publisher_cmd)
+    ld.add_action(start_rviz_cmd)
+    ld.add_action(start_gazebo_cmd)
+    ld.add_action(start_spawner_cmd)
     ld.add_action(start_joy_node_cmd)
     ld.add_action(start_joystick_cmd)
-    ld.add_action(start_rviz_cmd)
     
     return ld
