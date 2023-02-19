@@ -237,4 +237,9 @@
     <origin xyz="0.0925 0 -0.031" rpy="0 0 ${pi/2}"/>
   </joint>
 
+  <gazebo reference="caster_wheel">
+    <mu1 value="0.001"/>
+    <mu2 value="0.001"/>
+  </gazebo>
+
 </robot>
