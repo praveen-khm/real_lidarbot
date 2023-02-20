@@ -29,7 +29,7 @@
       <visual name='base_link_visual'>
         <geometry>
           <mesh>
-            <uri>model://lidarbot_description/meshes/robot_base.dae</uri>
+            <uri>model://lidarbot_description/meshes/robot_base_link.dae</uri>
           </mesh>
         </geometry>
       </visual>
@@ -444,7 +444,7 @@
         <visualize>true</visualize>
         <update_rate>10</update_rate>
         <camera>
-          <horizontal_fov>1.089</horizontal_fov>
+          <horizontal_fov>1.204</horizontal_fov>
           <image>
             <format>R8G8B8</format>
             <width>640</width>
@@ -511,47 +511,53 @@
       <child>camera_link</child>
     </joint>
 
-    <joint name='camera_optical_joint' type='fixed'>
+    <joint name="camera_optical_joint" type="fixed">
       <pose>0 0 0 0 0 0</pose>
       <parent>camera_link</parent>
       <child>camera_link_optical</child>
     </joint>
-    
-    <!-- Ros2_control -->
-    <ros2_control name='GazeboSystem' type='system'>
-      <hardware>
-        <plugin>gazebo_ros2_control/GazeboSystem</plugin>
-      </hardware>
-      <joint name='left_wheel_joint'>
-        <command_interface name='velocity'>
-          <param name='min'>-10</param>
-          <param name='max'>10</param>
-        </command_interface>
-        <state_interface name='velocity'/>
-        <state_interface name='position'/>
-      </joint>
-      <joint name='right_wheel_joint'>
-        <command_interface name='velocity'>
-          <param name='min'>-10</param>
-          <param name='max'>10</param>
-        </command_interface>
-        <state_interface name='velocity'/>
-        <state_interface name='position'/>
-      </joint>
-    </ros2_control>
 
-    <plugin name='gazebo_ros2_control' filename='libgazebo_ros2_control.so'>
-      <parameters>$(find real_lidarbot)/config/my_controllers.yaml</parameters>
+    <!-- Wheel Odometry -->
+    <plugin name='lidarbot_diff_drive' filename='libgazebo_ros_diff_drive.so'>
+      <update_rate>25</update_rate>
+      <left_joint>left_wheel_joint</left_joint>
+      <right_joint>right_wheel_joint</right_joint>
+      <wheel_separation>0.134</wheel_separation>
+      <wheel_diameter>0.067</wheel_diameter>
+      <max_wheel_torque>15</max_wheel_torque>
+      <max_wheel_acceleration>1.0</max_wheel_acceleration>
+      <command_topic>cmd_vel</command_topic>
+      
+      <!-- Output. When false, publish no wheel odometry data to a ROS topic -->
+      <publish_odom>true</publish_odom>
+      <!-- When true, publish coordinate transform from odom to base_footprint -->
+      <!-- Addison usually uses the robot_localization package to publish this transform -->   
+      <publish_odom_tf>true</publish_odom_tf>     
+      <!-- When true, publish coordinate transform from base_link to the wheels -->
+      <!-- The robot_state_publisher package is often used to publish this transform -->   
+      <publish_wheel_tf>false</publish_wheel_tf>
+      <!-- Topic to publish nav_msgs/Odometry messages, defaults to `odom` -->
+      <odometry_topic>odom</odometry_topic>
+      <!-- Odometry frame, defaults to `odom` -->
+      <odometry_frame>odom</odometry_frame>
+      <!-- Robot frame to calculate odometry from, defaults to `base_footprint` -->
+      <robot_base_frame>base_footprint</robot_base_frame>
+      <!-- Odometry source, 0 for ENCODER, 1 for WORLD, defaults to WORLD -->
+      <odometry_source>1</odometry_source>
+      <!-- Change the ROS topic we will publish the odometry data to -->
+      <ros>
+        <remapping>odom:=wheel/odometry</remapping>
+      </ros>
     </plugin>
 
     <!-- Joint State Publisher -->
-    <!-- <plugin name='lidarbot_joint_state' filename='libgazebo_ros_joint_state_publisher.so'>
+    <plugin name='lidarbot_joint_state' filename='libgazebo_ros_joint_state_publisher.so'>
       <ros>
         <remapping>~/out:=joint_states</remapping>
       </ros>
       <update_rate>25</update_rate>
       <joint_name>left_wheel_joint</joint_name>
       <joint_name>right_wheel_joint</joint_name>
-    </plugin> -->
+    </plugin>
   </model>
 </sdf>
