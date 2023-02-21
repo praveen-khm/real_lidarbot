@@ -2,8 +2,8 @@
 <robot name="lidarbot" xmlns:xacro="http://ros.org/wiki/xacro">
 
     <xacro:include filename="lidarbot_core.xacro"/>
-    <!-- <xacro:include filename="gazebo_control.xacro"/> -->
-    <xacro:include filename="ros2_control.xacro"/>
+    <xacro:include filename="gazebo_control.xacro"/>
+    <!-- <xacro:include filename="ros2_control.xacro"/> -->
     <xacro:include filename="camera.xacro"/>
     <xacro:include filename="imu.xacro"/>
     <xacro:include filename="lidar.xacro"/> 
