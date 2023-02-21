@@ -194,7 +194,6 @@
       <origin xyz="0 0 -0.0065" rpy="0 0 0"/>
       <geometry>
         <sphere radius="${wheel_radius}"/>
-        <!-- <cylinder radius="${wheel_radius}" length="${wheel_height}"/> -->
       </geometry>
     </collision>
 
