@@ -1,7 +1,6 @@
 # Launch simulation of lidarbot in Rviz and Gazebo
 # 
-# 
-# 
+#
 # 
 # File adapted from https://automaticaddison.com
 
@@ -32,6 +31,7 @@ def generate_launch_description():
     rviz_config_file = LaunchConfiguration('rviz_config_file')
     use_rviz = LaunchConfiguration('use_rviz')
     use_sim_time = LaunchConfiguration('use_sim_time')
+    use_ros2_control = LaunchConfiguration('use_ros2_control')
     use_gazebo = LaunchConfiguration('use_gazebo')
     use_joystick = LaunchConfiguration('use_joystick')
     world = LaunchConfiguration('world')
@@ -62,6 +62,12 @@ def generate_launch_description():
         default_value='True',
         description='Use simulation (Gazebo) clock if true')
     
+    declare_use_ros2_control_cmd = DeclareLaunchArgument(
+        name='use_ros2_control',
+        default_value='True',
+        description='Use ros2_control if true'
+    )
+
     declare_use_gazebo_cmd = DeclareLaunchArgument(
         name='use_gazebo', 
         default_value='True',
@@ -72,12 +78,14 @@ def generate_launch_description():
         default_value=world_path,
         description='Full path to the world model to load')
     
-    # Specify the actions
+    # Specify actions
     
     # Start robot state publisher
     start_robot_state_publisher_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(pkg_share, 'launch', 'robot_state_publisher_launch.py')]), 
-        launch_arguments={'use_sim_time': use_sim_time, 'urdf_model': urdf_model}.items())
+        launch_arguments={'use_sim_time': use_sim_time, 
+                          'urdf_model': urdf_model, 
+                          'use_ros2_control': use_ros2_control}.items())
 
     # Launch RViz
     start_rviz_cmd = Node(
@@ -138,6 +146,7 @@ def generate_launch_description():
     ld.add_action(declare_rviz_config_file_cmd)
     ld.add_action(declare_use_sim_time_cmd)
     ld.add_action(declare_use_rviz_cmd)
+    ld.add_action(declare_use_ros2_control_cmd)
     ld.add_action(declare_use_gazebo_cmd)
     ld.add_action(declare_world_cmd)
     ld.add_action(declare_joystick_cmd)
