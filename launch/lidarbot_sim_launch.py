@@ -113,12 +113,14 @@ def generate_launch_description():
     
     # Spawn diff_controller
     start_diff_controller_cmd = Node(
+        # condition=IfCondition(use_ros2_control)
         package='controller_manager',
         executable='spawner.py',
         arguments=['diff_controller'])
 
     # Spawn joint_state_broadcaser
     start_joint_broadcaster_cmd = Node(
+        # condition=IfCondition(use_ros2_control)
         package='controller_manager',
         executable='spawner.py',
         arguments=['joint_broadcaster'])
