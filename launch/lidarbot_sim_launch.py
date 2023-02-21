@@ -21,6 +21,7 @@ def generate_launch_description():
     # Set the path to different files and folders
     pkg_share = FindPackageShare(package='real_lidarbot').find('real_lidarbot')
     pkg_gazebo_ros = FindPackageShare(package='gazebo_ros').find('gazebo_ros')
+    gazebo_params_file = os.path.join(pkg_share, '/config/gazebo_params.yaml')
     default_rviz_config_path = os.path.join(pkg_share, 'rviz/view_lidarbot.rviz')
     default_urdf_model_path = os.path.join(pkg_share, 'models/lidarbot.urdf.xacro')
     world_filename = 'obstacles.world'
@@ -91,7 +92,7 @@ def generate_launch_description():
     start_gazebo_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(pkg_gazebo_ros, 'launch', 'gazebo.launch.py')]),
         condition=IfCondition(use_gazebo),
-        launch_arguments={'world': world}.items())   
+        launch_arguments={'world': world, 'extra_gazebo_args': '--ros-args --params-file ' + gazebo_params_file}.items())   
 
     # Spawn robot in Gazebo
     start_spawner_cmd = Node(
