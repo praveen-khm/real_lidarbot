@@ -64,9 +64,8 @@ def generate_launch_description():
     
     declare_use_ros2_control_cmd = DeclareLaunchArgument(
         name='use_ros2_control',
-        default_value='True',
-        description='Use ros2_control if true'
-    )
+        default_value='False',
+        description='Use ros2_control if true')
 
     declare_use_gazebo_cmd = DeclareLaunchArgument(
         name='use_gazebo', 
@@ -113,14 +112,14 @@ def generate_launch_description():
     
     # Spawn diff_controller
     start_diff_controller_cmd = Node(
-        condition=IfCondition(use_ros2_control),
+        # condition=IfCondition(use_ros2_control),
         package='controller_manager',
         executable='spawner.py',
         arguments=['diff_controller'])
 
     # Spawn joint_state_broadcaser
     start_joint_broadcaster_cmd = Node(
-        condition=IfCondition(use_ros2_control),
+        # condition=IfCondition(use_ros2_control),
         package='controller_manager',
         executable='spawner.py',
         arguments=['joint_broadcaster'])
