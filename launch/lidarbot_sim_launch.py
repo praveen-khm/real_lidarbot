@@ -4,8 +4,8 @@
 import os
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
-from launch.conditions import IfCondition
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.conditions import IfCondition, UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 
@@ -98,6 +98,18 @@ def generate_launch_description():
         arguments=['-topic', 'robot_description',
                    '-entity', 'lidarbot'])
     
+    # Spawn diff_controller
+    start_diff_controller_cmd = Node(
+        package='controller_manager',
+        executable='spawner.py',
+        arguments=['diff_controller'])
+
+    # Spawn joint_state_broadcaser
+    start_joint_broadcaster_cmd = Node(
+        package='controller_manager',
+        executable='spawner.py',
+        arguments=['joint_broadcaster'])
+
     # Launch the inbuilt ros2 joy node
     start_joy_node_cmd = Node(
         condition=IfCondition(use_joystick),
@@ -105,12 +117,13 @@ def generate_launch_description():
         executable='joy_node',
         name='joy_node')
 
-    # Launch inbuilt teleop_twist_joy node 
+    # Launch inbuilt teleop_twist_joy node with remappings for diff_controller using ros2_control
     start_joystick_cmd =  Node(
         condition=IfCondition(use_joystick),
         package='teleop_twist_joy',
         executable='teleop_node',
-        name='teleop_node')
+        name='teleop_node',
+        remappings=['/cmd_vel', '/diff_controller/cmd_vel_unstamped'])
     
     # Create the launch description and populate
     ld = LaunchDescription()
@@ -129,6 +142,8 @@ def generate_launch_description():
     ld.add_action(start_gazebo_cmd)
     ld.add_action(start_rviz_cmd)
     ld.add_action(start_spawner_cmd)
+    ld.add_action(start_diff_controller_cmd)
+    ld.add_action(start_joint_broadcaster_cmd)
     ld.add_action(start_joy_node_cmd)
     ld.add_action(start_joystick_cmd)
     
