@@ -123,7 +123,7 @@ def generate_launch_description():
         package='teleop_twist_joy',
         executable='teleop_node',
         name='teleop_node',
-        remappings=['/cmd_vel', '/diff_controller/cmd_vel_unstamped'])
+        remappings=[('/cmd_vel', '/diff_controller/cmd_vel_unstamped')])
     
     # Create the launch description and populate
     ld = LaunchDescription()
