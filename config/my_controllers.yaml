@@ -1,7 +1,7 @@
 controller_manager:
   ros__parameters:
     update_rate: 30.0
-    use_sim_time: true # This setting is propagated to the diff_controller below
+    # use_sim_time: true # This setting is propagated to the diff_controller below
 
     diff_controller:
       type: diff_drive_controller/DiffDriveController
