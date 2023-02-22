@@ -64,8 +64,7 @@ def generate_launch_description():
     
     declare_use_ros2_control_cmd = DeclareLaunchArgument(
         name='use_ros2_control',
-        default_value='false',
-        # default_value='False',
+        default_value='False',
         description='Use ros2_control if true')
 
     declare_use_gazebo_cmd = DeclareLaunchArgument(
@@ -85,7 +84,8 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([os.path.join(pkg_share, 'launch', 'robot_state_publisher_launch.py')]), 
         launch_arguments={'use_sim_time': use_sim_time, 
                           'urdf_model': urdf_model, 
-                          'use_ros2_control': use_ros2_control}.items())
+                          'use_ros2_control': 'False'}.items())
+                        #   'use_ros2_control': use_ros2_control}.items())
 
     # Launch RViz
     start_rviz_cmd = Node(

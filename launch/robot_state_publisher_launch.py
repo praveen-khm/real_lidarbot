@@ -8,9 +8,15 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
 
-    # Process URDF file
+    # Launch config variables
+    urdf_model = LaunchConfiguration('urdf_model')
+    use_sim_time = LaunchConfiguration('use_sim_time')
+    use_ros2_control = LaunchConfiguration('use_ros2_control')
+
+    # Process files
     pkg_path = FindPackageShare(package='real_lidarbot').find('real_lidarbot')
     urdf_model_path = os.path.join(pkg_path, 'models/lidarbot.urdf.xacro')
+    robot_description_config = Command(['xacro ', urdf_model_path, ' use_ros2_control:=', use_ros2_control])
     
     # Declare the launch arguments  
     declare_urdf_model_path_cmd = DeclareLaunchArgument(
@@ -25,23 +31,19 @@ def generate_launch_description():
     
     declare_use_ros2_control_cmd = DeclareLaunchArgument(
         name='use_ros2_control',
-        default_value='false',
-        # default_value='False',
+        default_value='False',
         description='Use ros2_control if true')
     
-    # Launch config variables
-    urdf_model = LaunchConfiguration('urdf_model')
-    use_sim_time = LaunchConfiguration('use_sim_time')
-    use_ros2_control = LaunchConfiguration('use_ros2_control')
-    
     # Start robot state publisher node
+    params = {'robot_description': robot_description_config, 'use_sim_time': use_sim_time}
     start_robot_state_publisher_cmd = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
-        parameters=[{
-                    'robot_description': Command(['xacro ' , urdf_model]), 
-                    'use_sim_time': use_sim_time,
-                    'use_ros2_control': use_ros2_control}])
+        parameters=[params])
+        # parameters=[{
+        #             'robot_description': Command(['xacro ' , urdf_model]), 
+        #             'use_sim_time': use_sim_time,
+        #             'use_ros2_control': use_ros2_control}])
     
     # Create the launch description and populate
     ld = LaunchDescription()
