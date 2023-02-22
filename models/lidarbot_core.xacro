@@ -173,7 +173,6 @@
     <xacro:cylinder_inertia mass="${wheel_mass}" length="${wheel_height}" radius="${wheel_radius}">
       <origin xyz="0 0 0" rpy="0 0 0"/>
     </xacro:cylinder_inertia>
-
   </link>
 
   <joint name="left_wheel_joint" type="continuous">
