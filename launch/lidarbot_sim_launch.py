@@ -8,7 +8,7 @@ import os
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
-from launch.conditions import IfCondition
+from launch.conditions import IfCondition, UnlessCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PythonExpression
 
@@ -134,7 +134,7 @@ def generate_launch_description():
     
     # Launch inbuilt teleop_twist_joy node when using gazebo control plugin (not using ros2_control plugin)
     start_gazebo_joystick_cmd =  Node(
-        condition=IfCondition(
+        condition=UnlessCondition(
                     PythonExpression(["'", use_joystick, "' and not '", use_ros2_control, "'"])),
         package='teleop_twist_joy',
         executable='teleop_node',
