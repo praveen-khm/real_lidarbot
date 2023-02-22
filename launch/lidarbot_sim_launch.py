@@ -21,7 +21,8 @@ def generate_launch_description():
     pkg_share = FindPackageShare(package='real_lidarbot').find('real_lidarbot')
     pkg_gazebo_ros = FindPackageShare(package='gazebo_ros').find('gazebo_ros')
     gazebo_params_file = os.path.join(pkg_share, 'config/gazebo_params.yaml')
-    default_rviz_config_path = os.path.join(pkg_share, 'rviz/view_lidarbot.rviz')
+    default_rviz_config_path = os.path.join(pkg_share, 'rviz/lidarbot_sim.rviz')
+    # default_rviz_config_path = os.path.join(pkg_share, 'rviz/view_lidarbot.rviz')
     default_urdf_model_path = os.path.join(pkg_share, 'models/lidarbot.urdf.xacro')
     world_filename = 'obstacles.world'
     world_path = os.path.join(pkg_share, 'worlds', world_filename)
