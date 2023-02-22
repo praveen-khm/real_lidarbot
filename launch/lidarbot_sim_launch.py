@@ -136,7 +136,8 @@ def generate_launch_description():
     start_gazebo_joystick_cmd =  Node(
         condition=IfCondition(
                     # PythonExpression([use_joystick, ' and not ', use_ros2_control])),
-                    PythonExpression(["'", use_joystick, "' == 'True ' and '", use_ros2_control, "' == 'False '"])),
+                    PythonExpression(["'", use_joystick, "' and not '", use_ros2_control, "'"])),
+                    # PythonExpression(["'", use_joystick, "' == 'True ' and '", use_ros2_control, "' == 'False '"])),
         package='teleop_twist_joy',
         executable='teleop_node',
         name='teleop_node')
