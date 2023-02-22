@@ -84,7 +84,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([os.path.join(pkg_share, 'launch', 'robot_state_publisher_launch.py')]), 
         launch_arguments={'use_sim_time': use_sim_time, 
                           'urdf_model': urdf_model, 
-                          'use_ros2_control': 'False'}.items())
+                          'use_ros2_control': 'True'}.items())
                         #   'use_ros2_control': use_ros2_control}.items())
 
     # Launch RViz
