@@ -145,7 +145,7 @@ def generate_launch_description():
     # Launch inbuilt teleop_twist_joy node with remappings for diff_controller when using ros2_control plugin
     start_ros2_joystick_cmd =  Node(
         condition=IfCondition(
-                    PythonExpression([use_joystick, ' and ', use_ros2_control])),
+                    PythonExpression(["'", use_joystick, "' and '", use_ros2_control, "'"])),
         package='teleop_twist_joy',
         executable='teleop_node',
         name='teleop_node',
