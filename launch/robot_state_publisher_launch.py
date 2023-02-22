@@ -9,7 +9,6 @@ from launch_ros.substitutions import FindPackageShare
 def generate_launch_description():
 
     # Launch config variables
-    urdf_model = LaunchConfiguration('urdf_model')
     use_sim_time = LaunchConfiguration('use_sim_time')
     use_ros2_control = LaunchConfiguration('use_ros2_control')
 
@@ -19,11 +18,6 @@ def generate_launch_description():
     robot_description_config = Command(['xacro ', urdf_model_path, ' use_ros2_control:=', use_ros2_control])
     
     # Declare the launch arguments  
-    declare_urdf_model_path_cmd = DeclareLaunchArgument(
-        name='urdf_model',
-        default_value=urdf_model_path, 
-        description='Absolute path to robot urdf file')
-    
     declare_use_sim_time_cmd = DeclareLaunchArgument(
         name='use_sim_time',
         default_value='False',
@@ -40,16 +34,11 @@ def generate_launch_description():
         package='robot_state_publisher',
         executable='robot_state_publisher',
         parameters=[params])
-        # parameters=[{
-        #             'robot_description': Command(['xacro ' , urdf_model]), 
-        #             'use_sim_time': use_sim_time,
-        #             'use_ros2_control': use_ros2_control}])
     
     # Create the launch description and populate
     ld = LaunchDescription()
     
     # Declare the launch options
-    ld.add_action(declare_urdf_model_path_cmd)
     ld.add_action(declare_use_sim_time_cmd)
     ld.add_action(declare_use_ros2_control_cmd)
     
