@@ -64,7 +64,8 @@ def generate_launch_description():
     
     declare_use_ros2_control_cmd = DeclareLaunchArgument(
         name='use_ros2_control',
-        default_value='False',
+        default_value='false',
+        # default_value='False',
         description='Use ros2_control if true')
 
     declare_use_gazebo_cmd = DeclareLaunchArgument(
@@ -130,7 +131,15 @@ def generate_launch_description():
         package='joy',
         executable='joy_node',
         name='joy_node')
-
+    
+    # Work on the conditionals better 
+    # Launch inbuilt teleop_twist_joy node for gazebo ros control
+    # start_joystick_cmd =  Node(
+    #     condition=IfCondition(use_joystick),
+    #     package='teleop_twist_joy',
+    #     executable='teleop_node',
+    #     name='teleop_node')
+ 
     # Launch inbuilt teleop_twist_joy node with remappings for diff_controller using ros2_control
     start_joystick_cmd =  Node(
         condition=IfCondition(use_joystick),
