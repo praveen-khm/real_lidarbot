@@ -10,7 +10,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PythonExpression
 
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
@@ -22,7 +22,6 @@ def generate_launch_description():
     pkg_gazebo_ros = FindPackageShare(package='gazebo_ros').find('gazebo_ros')
     gazebo_params_file = os.path.join(pkg_share, 'config/gazebo_params.yaml')
     default_rviz_config_path = os.path.join(pkg_share, 'rviz/lidarbot_sim.rviz')
-    # default_rviz_config_path = os.path.join(pkg_share, 'rviz/view_lidarbot.rviz')
     default_urdf_model_path = os.path.join(pkg_share, 'models/lidarbot.urdf.xacro')
     world_filename = 'obstacles.world'
     world_path = os.path.join(pkg_share, 'worlds', world_filename)
@@ -114,14 +113,14 @@ def generate_launch_description():
     
     # Spawn diff_controller
     start_diff_controller_cmd = Node(
-        # condition=IfCondition(use_ros2_control),
+        condition=IfCondition(use_ros2_control),
         package='controller_manager',
         executable='spawner.py',
         arguments=['diff_controller'])
 
     # Spawn joint_state_broadcaser
     start_joint_broadcaster_cmd = Node(
-        # condition=IfCondition(use_ros2_control),
+        condition=IfCondition(use_ros2_control),
         package='controller_manager',
         executable='spawner.py',
         arguments=['joint_broadcaster'])
@@ -133,15 +132,15 @@ def generate_launch_description():
         executable='joy_node',
         name='joy_node')
     
-    # Work on the conditionals better 
-    # Launch inbuilt teleop_twist_joy node for gazebo ros control
-    # start_joystick_cmd =  Node(
-    #     condition=IfCondition(use_joystick),
-    #     package='teleop_twist_joy',
-    #     executable='teleop_node',
-    #     name='teleop_node')
+    # Launch inbuilt teleop_twist_joy node when using gazebo control plugin
+    start_joystick_cmd =  Node(
+        condition=IfCondition(
+                    PythonExpression([use_joystick, ' and ', ' not ', use_ros2_control])),
+        package='teleop_twist_joy',
+        executable='teleop_node',
+        name='teleop_node')
  
-    # Launch inbuilt teleop_twist_joy node with remappings for diff_controller using ros2_control
+    # Launch inbuilt teleop_twist_joy node with remappings for diff_controller when using ros2_control plugin
     start_joystick_cmd =  Node(
         condition=IfCondition(use_joystick),
         package='teleop_twist_joy',
