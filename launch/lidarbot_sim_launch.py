@@ -135,7 +135,8 @@ def generate_launch_description():
     # Launch inbuilt teleop_twist_joy node when using gazebo control plugin (not using ros2_control plugin)
     start_gazebo_joystick_cmd =  Node(
         condition=IfCondition(
-                    PythonExpression([use_joystick, ' and ', ' not ', use_ros2_control])),
+                    PythonExpression([use_joystick, ' and not ', use_ros2_control])),
+                    # PythonExpression([use_joystick, ' == ', 'true', ' and ', use_ros2_control, ' == ', 'false'])),
         package='teleop_twist_joy',
         executable='teleop_node',
         name='teleop_node')
