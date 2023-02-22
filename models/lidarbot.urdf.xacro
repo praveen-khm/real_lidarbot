@@ -13,7 +13,6 @@
         <xacro:include filename="gazebo_control.xacro"/>
     </xacro:unless>
 
-    <!-- <xacro:include filename="gazebo_control.xacro"/> -->
     <xacro:include filename="camera.xacro"/>
     <xacro:include filename="imu.xacro"/>
     <xacro:include filename="lidar.xacro"/> 

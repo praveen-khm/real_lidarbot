@@ -1,6 +1,6 @@
-# Launch simulation of lidarbot in Rviz and Gazebo
-# 
-#
+# Launches the lidarbot in both Gazebo and/or Rviz. There are a number of launch arguments that can be toggled. 
+# Such as using Gazebothe gazebo_ros plugin or the ros2_control plugin, using a joystick or not, using Gazebo's sim time
+# or not. 
 # 
 # File adapted from https://automaticaddison.com
 
@@ -99,7 +99,6 @@ def generate_launch_description():
     start_gazebo_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(pkg_gazebo_ros, 'launch', 'gazebo.launch.py')]),
         condition=IfCondition(use_gazebo),
-        # launch_arguments={'world': world}.items())   
         launch_arguments={'world': world, 'extra_gazebo_args': '--ros-args --params-file ' + gazebo_params_file}.items())   
 
     # Spawn robot in Gazebo
@@ -131,14 +130,6 @@ def generate_launch_description():
         package='joy',
         executable='joy_node',
         name='joy_node')
-    
-    # Launch inbuilt teleop_twist_joy node when using gazebo control plugin (not using ros2_control plugin)
-    start_gazebo_joystick_cmd =  Node(
-        condition=UnlessCondition(
-                    PythonExpression(["'", use_joystick, "' and '", use_ros2_control, "'"])),
-        package='teleop_twist_joy',
-        executable='teleop_node',
-        name='teleop_node_gazebo')
  
     # Launch inbuilt teleop_twist_joy node with remappings for diff_controller when using ros2_control plugin
     start_ros2_joystick_cmd =  Node(
@@ -148,6 +139,14 @@ def generate_launch_description():
         executable='teleop_node',
         name='teleop_node_ros2_control',
         remappings=[('/cmd_vel', '/diff_controller/cmd_vel_unstamped')])
+    
+    # Launch inbuilt teleop_twist_joy node when using gazebo control plugin (not using ros2_control plugin)
+    start_gazebo_joystick_cmd =  Node(
+        condition=UnlessCondition(
+                    PythonExpression(["'", use_joystick, "' and '", use_ros2_control, "'"])),
+        package='teleop_twist_joy',
+        executable='teleop_node',
+        name='teleop_node_gazebo')
     
     # Create the launch description and populate
     ld = LaunchDescription()

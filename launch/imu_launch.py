@@ -1,3 +1,5 @@
+# Launches the custom written imu node
+
 from launch import LaunchDescription
 
 from launch_ros.actions import Node

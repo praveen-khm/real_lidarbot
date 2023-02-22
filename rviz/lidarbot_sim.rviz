@@ -6,7 +6,6 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /LaserScan1
       Splitter Ratio: 0.5
     Tree Height: 392
   - Class: rviz_common/Selection

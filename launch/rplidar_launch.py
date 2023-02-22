@@ -1,3 +1,5 @@
+# Launch file to start the RPLidar A1 sensor
+
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration

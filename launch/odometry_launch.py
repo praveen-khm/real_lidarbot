@@ -1,3 +1,5 @@
+# Launches the custom written encoder and odometry nodes
+
 from launch import LaunchDescription
 from launch_ros.actions import Node
 
