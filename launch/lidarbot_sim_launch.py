@@ -99,8 +99,8 @@ def generate_launch_description():
     start_gazebo_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(pkg_gazebo_ros, 'launch', 'gazebo.launch.py')]),
         condition=IfCondition(use_gazebo),
-        launch_arguments={'world': world}.items())   
-        # launch_arguments={'world': world, 'extra_gazebo_args': '--ros-args --params-file ' + gazebo_params_file}.items())   
+        # launch_arguments={'world': world}.items())   
+        launch_arguments={'world': world, 'extra_gazebo_args': '--ros-args --params-file ' + gazebo_params_file}.items())   
 
     # Spawn robot in Gazebo
     start_spawner_cmd = Node(
