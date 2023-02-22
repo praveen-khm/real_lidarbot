@@ -132,8 +132,8 @@ def generate_launch_description():
         executable='joy_node',
         name='joy_node')
     
-    # Launch inbuilt teleop_twist_joy node when using gazebo control plugin
-    start_joystick_cmd =  Node(
+    # Launch inbuilt teleop_twist_joy node when using gazebo control plugin (not using ros2_control plugin)
+    start_gazebo_joystick_cmd =  Node(
         condition=IfCondition(
                     PythonExpression([use_joystick, ' and ', ' not ', use_ros2_control])),
         package='teleop_twist_joy',
@@ -141,8 +141,8 @@ def generate_launch_description():
         name='teleop_node')
  
     # Launch inbuilt teleop_twist_joy node with remappings for diff_controller when using ros2_control plugin
-    start_joystick_cmd =  Node(
-                condition=IfCondition(
+    start_ros2_joystick_cmd =  Node(
+        condition=IfCondition(
                     PythonExpression([use_joystick, ' and ', use_ros2_control])),
         package='teleop_twist_joy',
         executable='teleop_node',
@@ -177,6 +177,7 @@ def generate_launch_description():
     ld.add_action(start_diff_controller_cmd)
     ld.add_action(start_joint_broadcaster_cmd)
     ld.add_action(start_joy_node_cmd)
-    ld.add_action(start_joystick_cmd)
+    ld.add_action(start_gazebo_joystick_cmd)
+    ld.add_action(start_ros2_joystick_cmd)
     
     return ld
