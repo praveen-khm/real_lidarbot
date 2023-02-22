@@ -113,14 +113,14 @@ def generate_launch_description():
     
     # Spawn diff_controller
     start_diff_controller_cmd = Node(
-        # condition=IfCondition(use_ros2_control),
+        condition=IfCondition(use_ros2_control),
         package='controller_manager',
         executable='spawner.py',
         arguments=['diff_controller'])
 
     # Spawn joint_state_broadcaser
     start_joint_broadcaster_cmd = Node(
-        # condition=IfCondition(use_ros2_control),
+        condition=IfCondition(use_ros2_control),
         package='controller_manager',
         executable='spawner.py',
         arguments=['joint_broadcaster'])
@@ -135,9 +135,7 @@ def generate_launch_description():
     # Launch inbuilt teleop_twist_joy node when using gazebo control plugin (not using ros2_control plugin)
     start_gazebo_joystick_cmd =  Node(
         condition=IfCondition(
-                    # PythonExpression([use_joystick, ' and not ', use_ros2_control])),
                     PythonExpression(["'", use_joystick, "' and not '", use_ros2_control, "'"])),
-                    # PythonExpression(["'", use_joystick, "' == 'True ' and '", use_ros2_control, "' == 'False '"])),
         package='teleop_twist_joy',
         executable='teleop_node',
         name='teleop_node')
