@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 '''
-    This scripts counts the number of wheel encoder ticks/pulses in the forward or backward direction, not both, 
+    This script counts the number of wheel encoder ticks/pulses in the forward or backward direction, not both, 
     as the wheel(s) is/are turned and prints the pulses in the terminal.
 '''
 
